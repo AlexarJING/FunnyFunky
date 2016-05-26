@@ -8,7 +8,7 @@ tween= require "lib/tween"
 delay= require "lib/delay"
 input= require "lib/input"
 stage= require "cls/stage"
-local loader= require "spineAtlasLoader"
+local loader= require "spineAtlasLoader2"
 loader.load(love.filesystem.newFile("skeleton.atlas", "r"))
 
 function love.load() 

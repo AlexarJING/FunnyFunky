@@ -57,7 +57,7 @@ function loader.format(raw)
 	for i,v in ipairs(luaStr) do
 		rtStr=rtStr..v
 	end
-	print(rtStr)
+	
 	local tab=loadstring(rtStr)()
 
 end
