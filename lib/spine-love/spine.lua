@@ -69,12 +69,17 @@ end
 spine.Skeleton.failed = {} -- Placeholder for an image that failed to load.
 
 spine.Skeleton.new_super = spine.Skeleton.new
-function spine.Skeleton.new (objectName,skeletonData, group)
+function spine.Skeleton.new (objectName,skeletonData, batchData)
 	local self = spine.Skeleton.new_super(skeletonData)
 
 	-- createImage can customize where images are found.
 	function self:createImage (attachment)
-		return love.graphics.newImage("res/bone/"..objectName.."/images/"..attachment.name .. ".png")
+		if batchData then
+			return batchData.sprite[attachment]
+		else
+			return love.graphics.newImage(
+			"res/bone/"..objectName.."/images/"..attachment.name .. ".png")
+		end
 	end
 
 	-- updateWorldTransform positions images.
@@ -100,8 +105,19 @@ function spine.Skeleton.new (objectName,skeletonData, group)
 				if not image then -- Create new image.
 					image = self:createImage(attachment)
 					if image then
-						local imageWidth = image:getWidth()
-						local imageHeight = image:getHeight()
+						local imageWidth
+						local imageHeight
+						if batchData then
+							if image.rotate then
+								_,_,imageHeight,imageWidth=image.quad:getViewport()
+							else
+								_,_,imageWidth,imageHeight=image.quad:getViewport()
+							end
+						else
+							imageWidth = image:getWidth()
+							imageHeight = image:getHeight()
+							
+						end
 						attachment.widthRatio = attachment.width / imageWidth
 						attachment.heightRatio = attachment.height / imageHeight
 						attachment.originX = imageWidth / 2
@@ -150,7 +166,19 @@ function spine.Skeleton.new (objectName,skeletonData, group)
 				elseif slot.data.blendMode == spine.BlendMode.screen then
 					love.graphics.setBlendMode("screen")
 				end
-				love.graphics.draw(image, 
+
+				if batchData then
+					local r= image.rotate and -Pi/2 or 0
+					batchData.batch:add( 
+					self.x + x, 
+					self.y - y, 
+					r-rotation * 3.1415927 / 180,
+					xScale * attachment.widthRatio,
+					yScale * attachment.heightRatio,
+					attachment.originX,
+					attachment.originY)
+				else
+					love.graphics.draw(image, 
 					self.x + x, 
 					self.y - y, 
 					-rotation * 3.1415927 / 180,
@@ -158,6 +186,12 @@ function spine.Skeleton.new (objectName,skeletonData, group)
 					yScale * attachment.heightRatio,
 					attachment.originX,
 					attachment.originY)
+				end
+				
+			end
+			if batchData then
+				love.graphics.setColor(255, 255, 255, 255)
+				love.graphics.draw(batchData.batch)
 			end
 		end
 
@@ -225,6 +259,32 @@ function spine.Skeleton.new (objectName,skeletonData, group)
 	end
 
 	return self
+end
+
+local loader= require "lib/spineAtlasLoader"
+
+
+
+
+function spine.newActor(name,x,y,rot,scale)
+	local json = spine.SkeletonJson.new()
+	json.scale = scale
+	local data,batch
+	if love.filesystem.exists("res/bone/"..name.."/"..name..".atlas") then
+		data,batch=loader.load(name)
+	end
+	local skeletonData = json:readSkeletonDataFile("res/bone/"..name.."/"..name..".json")
+	
+	local skeleton = spine.Skeleton.new(name,skeletonData,batch)
+
+	skeleton.x = x
+	skeleton.y = y
+
+	skeleton:setToSetupPose()
+
+	local stateData = spine.AnimationStateData.new(skeletonData)
+	local state=spine.AnimationState.new(stateData)
+	return skeleton,skeletonData,state,stateData
 end
 
 return spine

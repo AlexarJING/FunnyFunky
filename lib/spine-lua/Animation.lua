@@ -607,19 +607,21 @@ function Animation.FfdTimeline.new ()
 		if slot.attachment ~= self.attachment then return end
 
 		local frames = self.frames
-		if time < frames[0] then return end -- Time is before first frame.
+		if time < frames[0] or #frames==0 then return end -- Time is before first frame.
 
 		local frameVertices = self.frameVertices
 		local vertexCount = #frameVertices[0]
 		local vertices = slot.attachmentVertices
-		if not vertices or #vertices ~= vertexCount then
+		if  vertices and #vertices ~= vertexCount then
 			if #vertices < vertexCount then
 				vertices = {}
 				slot.attachmentVertices = vertices
 			end
 			alpha = 1 -- Don't mix from uninitialized slot vertices.
 		end
+		if not vertices then vertices={} end
 		slot.attachmentVerticesCount = vertexCount
+
 		if time >= frames[#frames - 1] then -- Time is after last frame.
 			local lastVertices = frameVertices[#frames - 1]
 			if alpha < 1 then
@@ -774,5 +776,58 @@ function Animation.FlipYTimeline.new ()
 
 	return self
 end
+--[[
+Animation.ShearTimeline = {}
+function Animation.ShearTimeline.new ()
+	local PREV_FRAME_TIME = -3
+	local FRAME_X = 1
+	local FRAME_Y = 2
+
+	local self = Animation.CurveTimeline.new()
+	self.frames = {}
+	self.boneIndex = -1
+
+	function self:getDuration ()
+		return self.frames[#self.frames - 2]
+	end
+
+	function self:getFrameCount ()
+		return (#self.frames + 1) / 3
+	end
+
+	function self:setFrame (frameIndex, time, x, y)
+		frameIndex = frameIndex * 3
+		self.frames[frameIndex] = time
+		self.frames[frameIndex + 1] = x
+		self.frames[frameIndex + 2] = y
+	end
+
+	function self:apply (skeleton, lastTime, time, firedEvents, alpha)
+		local frames = self.frames
+		if time < frames[0] then return end -- Time is before first frame.
+
+		local bone = skeleton.bones[self.boneIndex]
+		
+		if time >= frames[#frames - 2] then -- Time is after last frame.
+			bone.x = bone.x + (bone.data.x + frames[#frames - 1] - bone.x) * alpha
+			bone.y = bone.y + (bone.data.y + frames[#frames] - bone.y) * alpha
+			return
+		end
+
+		-- Interpolate between the last frame and the current frame.
+		local frameIndex = binarySearch(frames, time, 3)
+		local prevFrameX = frames[frameIndex - 2]
+		local prevFrameY = frames[frameIndex - 1]
+		local frameTime = frames[frameIndex]
+		local percent = 1 - (time - frameTime) / (frames[frameIndex + PREV_FRAME_TIME] - frameTime)
+		if percent < 0 then percent = 0 elseif percent > 1 then percent = 1 end
+		percent = self:getCurvePercent(frameIndex / 3 - 1, percent)
+
+		bone.x = bone.x + (bone.data.x + prevFrameX + (frames[frameIndex + FRAME_X] - prevFrameX) * percent - bone.x) * alpha
+		bone.y = bone.y + (bone.data.y + prevFrameY + (frames[frameIndex + FRAME_Y] - prevFrameY) * percent - bone.y) * alpha
+	end
+
+	return self
+end]]
 
 return Animation

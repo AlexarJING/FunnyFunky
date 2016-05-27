@@ -1,50 +1,9 @@
 local scene = gamestate.new()
 
-local json = spine.SkeletonJson.new()
-json.scale = 0.3
-local skeletonData = json:readSkeletonDataFile("res/bone/boy/spineboy.json")
-local stateTab={}
-local stateIndex=1
-for k,v in pairs(skeletonData.animations) do
-	table.insert(stateTab, v.name)
-end
-
-local skeleton = spine.Skeleton.new("boy",skeletonData)
-
-skeleton.x = love.graphics.getWidth() / 4
-skeleton.y = love.graphics.getHeight() / 4 + 250
-skeleton.flipX = false
-skeleton.flipY = false
-skeleton.debugBones = true -- Omit or set to false to not draw debug lines on top of the images.
-skeleton.debugSlots = true
-skeleton:setToSetupPose()
-
--- AnimationStateData defines crossfade durations between animations.
-local stateData = spine.AnimationStateData.new(skeletonData)
-stateData:setMix("walk", "jump", 0.2)
-stateData:setMix("jump", "run", 0.2)
-
--- AnimationState has a queue of animations and can apply them with crossfading.
-local boy={}
-boy.state=spine.AnimationState.new(stateData)
-local state = boy.state
--- state:setAnimationByName(0, "test")
-state:setAnimationByName(0, "walk", true)
+local skeleton,skeletonData,state,stateData = spine.newActor("boy",500,300,0,0.3)
 
 
-state.onStart = function (trackIndex)
-	print(trackIndex.." start: "..state:getCurrent(trackIndex).animation.name)
-end
-state.onEnd = function (trackIndex)
-	print(trackIndex.." end: "..state:getCurrent(trackIndex).animation.name)
-end
-state.onComplete = function (trackIndex, loopCount)
-	print(trackIndex.." complete: "..state:getCurrent(trackIndex).animation.name..", "..loopCount)
-end
-state.onEvent = function (trackIndex, event)
-	print(trackIndex.." event: "..state:getCurrent(trackIndex).animation.name..", "..event.data.name..", "..event.intValue..", "..event.floatValue..", '"..(event.stringValue or "").."'")
-end
-
+state:setAnimationByName(0, "idle", true)
 
 function scene:init()
 	print("ok")
@@ -63,19 +22,62 @@ function scene:draw()
 	love.graphics.setColor(255, 255, 255)
 	skeleton:draw()
 end
-
+jumpSpeed=0
 function scene:update(dt)
+	if jumpSpeed<10 then
+		skeleton.y=skeleton.y+jumpSpeed
+		jumpSpeed=jumpSpeed+0.5
+	end
+	scene:keyDown()
 	state:update(dt)
 	state:apply(skeleton)
 	skeleton:updateWorldTransform()
 end 
 
-function scene:keypressed(key)
-	if key=="space" then
-		stateIndex=stateIndex+1
-		if stateIndex>#stateTab then stateIndex=1 end
-		state:addAnimationByName(0, stateTab[stateIndex], true)
+local currentState="idle"
+
+function scene:keyDown()
+	local anydown=false
+	if love.keyboard.isDown("a") then
+		skeleton.x=skeleton.x-2
+		skeleton.flipX=true
+		anydown=true
+	end
+	if love.keyboard.isDown("d") then
+		skeleton.x=skeleton.x+2
+		skeleton.flipX=false
+		anydown=true
+	end
+	if  love.keyboard.isDown("w") then
+		skeleton.y=skeleton.y-2
+		anydown=true
+	end
+	if  love.keyboard.isDown("s") then
+		skeleton.y=skeleton.y+2
+		anydown=true
+	end
+
+
+	if anydown then
+		if currentState~="walk" then
+			state:setAnimationByName(0, "walk", true)
+			currentState="walk"
+		end
+	else
+		if currentState~="idle" then
+			state:setAnimationByName(0, "idle", true)
+			currentState="idle"
+		end
 	end
 end
+
+
+function scene:keypressed(key)
+	if key=="space" then
+		state:setAnimationByName(0, "jump", false)
+		jumpSpeed=-10
+	end
+end
+
 
 return scene

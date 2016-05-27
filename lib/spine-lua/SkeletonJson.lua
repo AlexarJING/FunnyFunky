@@ -205,7 +205,6 @@ function SkeletonJson.new (attachmentLoader)
 	end
 
 	readAttachment = function (name, map)
-		name = map["name"] or name
 
 		local type = AttachmentType[map["type"] or "region"]
 		local path = map["path"] or name
@@ -291,6 +290,29 @@ function SkeletonJson.new (attachmentLoader)
 			mesh.weights = weights
 			mesh.triangles = getArray(map, "triangles", 1)
 			mesh.regionUVs = uvs
+			mesh:updateUVs()
+
+			local color = map["color"]
+			if color then
+				mesh.r = tonumber(color:sub(1, 2), 16) / 255
+				mesh.g = tonumber(color:sub(3, 4), 16) / 255
+				mesh.b = tonumber(color:sub(5, 6), 16) / 255
+				mesh.a = tonumber(color:sub(7, 8), 16) / 255
+			end
+
+			mesh.hullLength = (map["hull"] or 0) * 2
+			if map["edges"] then mesh.edges = getArray(map, "edges", 1) end
+			mesh.width = (map["width"] or 0) * scale
+			mesh.height = (map["height"] or 0) * scale
+			return mesh
+
+		elseif type == AttachmentType.weightedmesh then
+			local mesh = attachmentLoader:newMeshAttachment(skin, name, path)
+			if not mesh then return null end
+			mesh.path = path 
+			mesh.vertices = getArray(map, "vertices", scale)
+			mesh.triangles = getArray(map, "triangles", 1)
+			mesh.regionUVs = getArray(map, "uvs", 1)
 			mesh:updateUVs()
 
 			local color = map["color"]
@@ -433,6 +455,8 @@ function SkeletonJson.new (attachmentLoader)
 						table.insert(timelines, timeline)
 						duration = math.max(duration, timeline:getDuration())
 
+					elseif timelineName == "shear" then
+						
 					else
 						error("Invalid timeline type for a bone: " .. timelineName .. " (" .. boneName .. ")")
 					end
@@ -518,6 +542,7 @@ function SkeletonJson.new (attachmentLoader)
 								if isMesh then
 									local meshVertices = attachment.vertices
 									for ii = 1, vertexCount do
+										--if not vertices[ii] then vertices[ii]=0 end
 										vertices[ii] = vertices[ii] + meshVertices[ii]
 									end
 								elseif #verticesValue < vertexCount then

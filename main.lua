@@ -8,8 +8,7 @@ tween= require "lib/tween"
 delay= require "lib/delay"
 input= require "lib/input"
 stage= require "cls/stage"
-local loader= require "spineAtlasLoader2"
-loader.load(love.filesystem.newFile("skeleton.atlas", "r"))
+Camera= require "lib/gamera"
 
 function love.load() 
     state={}
@@ -17,6 +16,6 @@ function love.load()
         state[name:sub(1,-5)]=require("scene."..name:sub(1,-5))
     end
     gamestate.registerEvents()
-    gamestate.switch(state.game)
+    gamestate.switch(state.test)
 end
 
