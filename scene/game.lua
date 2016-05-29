@@ -1,12 +1,11 @@
 local scene = gamestate.new()
 
-local skeleton,skeletonData,state,stateData = spine.newActor("boy",500,300,0,0.3)
-
-
-state:setAnimationByName(0, "idle", true)
+local skeleton,skeletonData,state,stateData
 
 function scene:init()
-	print("ok")
+	skeleton,skeletonData,state,stateData = spine.newActor("boy",500,300,0,0.3)
+	state:setAnimationByName(0, "idle", true)
+	
 end 
 
 function scene:enter()

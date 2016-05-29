@@ -4,8 +4,36 @@
 		"selected_items":
 		[
 			[
+				"bone",
+				"boneCount"
+			],
+			[
+				"transfo",
+				"transformMap"
+			],
+			[
+				"weighted",
+				"WeightedMeshAttachment"
+			],
+			[
 				"for",
-				"fori	for i,v in ipairs()"
+				"forp	for k,v in pairs()"
+			],
+			[
+				"update",
+				"unpdateSkeletonState"
+			],
+			[
+				"aabb",
+				"aabbFoot"
+			],
+			[
+				"aabbB",
+				"aabbBody"
+			],
+			[
+				"string",
+				"string.match	(s, pattern [, init])"
 			],
 			[
 				"getlinew",
@@ -102,10 +130,6 @@
 			[
 				"coordi",
 				"CoordinateInfo"
-			],
-			[
-				"update",
-				"updateTodo"
 			],
 			[
 				"colli",
@@ -344,10 +368,6 @@
 				"brightness"
 			],
 			[
-				"string",
-				"string.format	(formatstring, ...)"
-			],
-			[
 				"setp",
 				"love.graphics.setPointStyle"
 			],
@@ -494,66 +514,56 @@
 			[
 				"ply",
 				"love.graphics.polygon"
-			],
-			[
-				"rando",
-				"love.math.random"
-			],
-			[
-				"inmd",
-				"love.image.newImageData"
-			],
-			[
-				"fon",
-				"love.graphics.newFont"
-			],
-			[
-				"carm",
-				"camera"
-			],
-			[
-				"event",
-				"love.event.quit"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "main.lua",
+			"file": "lib/spine-lua/Animation.lua",
 			"settings":
 			{
-				"buffer_size": 631,
+				"buffer_size": 27217,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/Alexar/Desktop/test/skeleton.atlas",
+			"file": "lib/spine-lua/SkeletonJson.lua",
 			"settings":
 			{
-				"buffer_size": 6766,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "local scene = gamestate.new()\n\nlocal stateTab={}\nlocal stateIndex=1\nfor k,v in pairs(skeletonData.animations) do\n	table.insert(stateTab, v.name)\nend\n\nstateData:setMix(\"walk\", \"jump\", 0.2)\nstateData:setMix(\"jump\", \"run\", 0.2)\n-- AnimationState has a queue of animations and can apply them with crossfading.\nlocal boy={}\nboy.state=spine.AnimationState.new(stateData)\nlocal state = boy.state\n-- state:setAnimationByName(0, \"test\")\nstate:setAnimationByName(0, \"walk\", true)\n\n\nstate.onStart = function (trackIndex)\n	print(trackIndex..\" start: \"..state:getCurrent(trackIndex).animation.name)\nend\nstate.onEnd = function (trackIndex)\n	print(trackIndex..\" end: \"..state:getCurrent(trackIndex).animation.name)\nend\nstate.onComplete = function (trackIndex, loopCount)\n	print(trackIndex..\" complete: \"..state:getCurrent(trackIndex).animation.name..\", \"..loopCount)\nend\nstate.onEvent = function (trackIndex, event)\n	print(trackIndex..\" event: \"..state:getCurrent(trackIndex).animation.name..\", \"..event.data.name..\", \"..event.intValue..\", \"..event.floatValue..\", '\"..(event.stringValue or \"\")..\"'\")\nend\n\n\nfunction scene:init()\n	print(\"ok\")\nend \n\nfunction scene:enter()\n	\nend\n\nfunction scene:leave()\n	\nend\n\n\nfunction scene:draw()\n	love.graphics.setColor(255, 255, 255)\n	skeleton:draw()\nend\n\nfunction scene:update(dt)\n	state:update(dt)\n	state:apply(skeleton)\n	skeleton:updateWorldTransform()\nend \n\nfunction scene:keypressed(key)\n	if key==\"space\" then\n		stateIndex=stateIndex+1\n		if stateIndex>#stateTab then stateIndex=1 end\n		state:addAnimationByName(0, stateTab[stateIndex], true)\n	end\nend\n\nreturn scene",
-			"file": "scene/game.lua",
-			"file_size": 2209,
-			"file_write_time": 131087840276148140,
-			"settings":
-			{
-				"buffer_size": 1589,
+				"buffer_size": 24065,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "-------------------------------------------------------------------------------\n-- Spine Runtimes Software License\n-- Version 2.3\n-- \n-- Copyright (c) 2013-2015, Esoteric Software\n-- All rights reserved.\n-- \n-- You are granted a perpetual, non-exclusive, non-sublicensable and\n-- non-transferable license to use, install, execute and perform the Spine\n-- Runtimes Software (the \"Software\") and derivative works solely for personal\n-- or internal use. Without the written permission of Esoteric Software (see\n-- Section 2 of the Spine Software License Agreement), you may not (a) modify,\n-- translate, adapt or otherwise create derivative works, improvements of the\n-- Software or develop new applications using the Software or (b) remove,\n-- delete, alter or obscure any trademarks or any copyright, trademark, patent\n-- or other intellectual property or proprietary rights notices on or in the\n-- Software, including any copy thereof. Redistributions in binary or source\n-- form must include this license and terms.\n-- \n-- THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE \"AS IS\" AND ANY EXPRESS OR\n-- IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n-- MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO\n-- EVENT SHALL ESOTERIC SOFTWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,\n-- SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,\n-- PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;\n-- OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,\n-- WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR\n-- OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF\n-- ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n-------------------------------------------------------------------------------\nlocal path = string.sub(..., 1, string.len(...) - string.len(\"spine-love.spine\"))\nlocal spine = {}\n\nspine.utils = require (path..\"spine-lua.utils\")\nspine.SkeletonJson = require (path..\"spine-lua.SkeletonJson\")\nspine.SkeletonData = require (path..\"spine-lua.SkeletonData\")\nspine.BoneData = require (path..\"spine-lua.BoneData\")\nspine.SlotData = require (path..\"spine-lua.SlotData\")\nspine.IkConstraintData = require (path..\"spine-lua.IkConstraintData\")\nspine.Skin = require (path..\"spine-lua.Skin\")\nspine.RegionAttachment = require (path..\"spine-lua.RegionAttachment\")\nspine.MeshAttachment = require (path..\"spine-lua.MeshAttachment\")\nspine.SkinnedMeshAttachment = require (path..\"spine-lua.SkinnedMeshAttachment\")\nspine.Skeleton = require (path..\"spine-lua.Skeleton\")\nspine.Bone = require (path..\"spine-lua.Bone\")\nspine.Slot = require (path..\"spine-lua.Slot\")\nspine.IkConstraint = require (path..\"spine-lua.IkConstraint\")\nspine.AttachmentType = require (path..\"spine-lua.AttachmentType\")\nspine.AttachmentLoader = require (path..\"spine-lua.AttachmentLoader\")\nspine.Animation = require (path..\"spine-lua.Animation\")\nspine.AnimationStateData = require (path..\"spine-lua.AnimationStateData\")\nspine.AnimationState = require (path..\"spine-lua.AnimationState\")\nspine.EventData = require (path..\"spine-lua.EventData\")\nspine.Event = require (path..\"spine-lua.Event\")\nspine.SkeletonBounds = require (path..\"spine-lua.SkeletonBounds\")\nspine.BlendMode = require (path..\"spine-lua.BlendMode\")\n\nspine.utils.readFile = function (fileName, base)\n	local path = fileName\n	if base then path = base .. '/' .. path end\n	return love.filesystem.read(path)\nend\n\nlocal json = require \"lib.spine-love.dkjson\"\nspine.utils.readJSON = function (text)\n	return json.decode(text)\nend\n\nspine.Skeleton.failed = {} -- Placeholder for an image that failed to load.\n\nspine.Skeleton.new_super = spine.Skeleton.new\nfunction spine.Skeleton.new (objectName,skeletonData, atlasData)\n	local self = spine.Skeleton.new_super(skeletonData)\n\n	-- createImage can customize where images are found.\n	function self:createImage (attachment)\n		return love.graphics.newImage(\"res/bone/\"..objectName..\"/images/\"..attachment.name .. \".png\")\n	end\n\n	-- updateWorldTransform positions images.\n	local updateWorldTransform_super = self.updateWorldTransform\n	function self:updateWorldTransform ()\n		updateWorldTransform_super(self)\n\n		if not self.images then self.images = {} end\n		local images = self.images\n\n		if not self.attachments then self.attachments = {} end\n		local attachments = self.attachments\n\n		for i,slot in ipairs(self.drawOrder) do\n			local attachment = slot.attachment\n			if not attachment then\n				images[slot] = nil\n			elseif attachment.type == spine.AttachmentType.region then\n				local image = images[slot]\n				if image and attachments[image] ~= attachment then -- Attachment image has changed.\n					image = nil\n				end\n				if not image then -- Create new image.\n					image = self:createImage(attachment)\n					if image then\n						local imageWidth = image:getWidth()\n						local imageHeight = image:getHeight()\n						attachment.widthRatio = attachment.width / imageWidth\n						attachment.heightRatio = attachment.height / imageHeight\n						attachment.originX = imageWidth / 2\n						attachment.originY = imageHeight / 2\n					else\n						print(\"Error creating image: \" .. attachment.name)\n						image = spine.Skeleton.failed\n					end\n					images[slot] = image\n					attachments[image] = attachment\n				end\n			end\n		end\n	end\n\n	function self:draw()\n		if not self.images then self.images = {} end\n		local images = self.images\n\n		local r, g, b, a = self.r * 255, self.g * 255, self.b * 255, self.a * 255\n\n		for i,slot in ipairs(self.drawOrder) do\n			local image = images[slot]\n			if image and image ~= spine.Skeleton.failed then\n				local attachment = slot.attachment\n				local x = slot.bone.worldX + attachment.x * slot.bone.m00 + attachment.y * slot.bone.m01\n				local y = slot.bone.worldY + attachment.x * slot.bone.m10 + attachment.y * slot.bone.m11\n				local rotation = slot.bone.worldRotation + attachment.rotation\n				local xScale = slot.bone.worldScaleX + attachment.scaleX - 1\n				local yScale = slot.bone.worldScaleY + attachment.scaleY - 1\n				if self.flipX then\n					xScale = -xScale\n					rotation = -rotation\n				end\n				if self.flipY then\n					yScale = -yScale\n					rotation = -rotation\n				end\n				love.graphics.setColor(r * slot.r, g * slot.g, b * slot.b, a * slot.a)\n				if slot.data.blendMode == spine.BlendMode.normal then\n					love.graphics.setBlendMode(\"alpha\")\n				elseif slot.data.blendMode == spine.BlendMode.additive then\n					love.graphics.setBlendMode(\"additive\")\n				elseif slot.data.blendMode == spine.BlendMode.multiply then\n					love.graphics.setBlendMode(\"multiply\")\n				elseif slot.data.blendMode == spine.BlendMode.screen then\n					love.graphics.setBlendMode(\"screen\")\n				end\n				love.graphics.draw(image, \n					self.x + x, \n					self.y - y, \n					-rotation * 3.1415927 / 180,\n					xScale * attachment.widthRatio,\n					yScale * attachment.heightRatio,\n					attachment.originX,\n					attachment.originY)\n			end\n		end\n\n		-- Debug bones.\n		if self.debugBones then\n			for i,bone in ipairs(self.bones) do\n				local xScale\n				local yScale\n				local rotation = -bone.worldRotation\n\n				if self.flipX then\n					xScale = -1\n					rotation = -rotation\n				else \n					xScale = 1\n				end\n\n				if self.flipY then\n					yScale = -1\n					rotation = -rotation\n				else\n					yScale = 1\n				end\n\n				love.graphics.push()\n				love.graphics.translate(self.x + bone.worldX, self.y - bone.worldY)\n				love.graphics.rotate(rotation * 3.1415927 / 180)\n				love.graphics.scale(xScale, yScale)\n				love.graphics.setColor(255, 0, 0)\n				love.graphics.line(0, 0, bone.data.length, 0)\n				love.graphics.setColor(0, 255, 0)\n				love.graphics.circle('fill', 0, 0, 3)\n				love.graphics.pop()\n			end\n		end\n\n		-- Debug slots.\n		if self.debugSlots then\n			love.graphics.setColor(0, 0, 255, 128)\n			for i,slot in ipairs(self.drawOrder) do\n				local attachment = slot.attachment\n				if attachment and attachment.type == spine.AttachmentType.region then\n					local x = slot.bone.worldX + attachment.x * slot.bone.m00 + attachment.y * slot.bone.m01\n					local y = slot.bone.worldY + attachment.x * slot.bone.m10 + attachment.y * slot.bone.m11\n					local rotation = slot.bone.worldRotation + attachment.rotation\n					local xScale = slot.bone.worldScaleX + attachment.scaleX - 1\n					local yScale = slot.bone.worldScaleY + attachment.scaleY - 1\n					if self.flipX then\n						xScale = -xScale\n						rotation = -rotation\n					end\n					if self.flipY then\n						yScale = -yScale\n						rotation = -rotation\n					end\n					love.graphics.push()\n					love.graphics.translate(self.x + x, self.y - y)\n					love.graphics.rotate(-rotation * 3.1415927 / 180)\n					love.graphics.scale(xScale, yScale)\n					love.graphics.rectangle('line', -attachment.width / 2, -attachment.height / 2, attachment.width, attachment.height)\n					love.graphics.pop()\n				end\n			end\n		end\n	end\n\n	return self\nend\n\nfunction spine.newActor(name,x,y,rot,scale)\n	local json = spine.SkeletonJson.new()\n	json.scale = scale\n	local skeletonData = json:readSkeletonDataFile(\"res/bone/boy/spineboy.json\")\n	local skeleton = spine.Skeleton.new(\"boy\",skeletonData)\n\n	skeleton.x = x\n	skeleton.y = y\n\n	skeleton:setToSetupPose()\n\n	local stateData = spine.AnimationStateData.new(skeletonData)\n	spine.AnimationState.new(stateData)\n\nend\n\nreturn spine\n",
 			"file": "lib/spine-love/spine.lua",
-			"file_size": 8903,
-			"file_write_time": 131087840835003360,
 			"settings":
 			{
-				"buffer_size": 9283,
+				"buffer_size": 10375,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "lib/spine-lua/Skeleton.lua",
+			"settings":
+			{
+				"buffer_size": 8276,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "lib/spine-lua/SkeletonBounds.lua",
+			"settings":
+			{
+				"buffer_size": 6249,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonJson.java",
+			"settings":
+			{
+				"buffer_size": 27983,
 				"line_ending": "Unix"
 			}
 		}
@@ -654,21 +664,59 @@
 	},
 	"expanded_folders":
 	[
-		"/F/Love2D Project/FunnyFunky",
-		"/F/Love2D Project/FunnyFunky/lib",
-		"/F/Love2D Project/FunnyFunky/lib/spine-love",
-		"/F/Love2D Project/FunnyFunky/lib/spine-lua",
-		"/F/Love2D Project/FunnyFunky/scene"
+		"/G/love2dproj/FunnyFunky",
+		"/G/love2dproj/FunnyFunky/lib",
+		"/G/love2dproj/FunnyFunky/lib/spine-love",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment",
+		"/G/love2dproj/FunnyFunky/res",
+		"/G/love2dproj/FunnyFunky/res/bone",
+		"/G/love2dproj/FunnyFunky/res/bone/mega"
 	],
 	"file_history":
 	[
-		"/C/Users/Alexar/Desktop/test/skeleton.atlas",
-		"/C/Users/Alexar/Desktop/AtlasImporter.lua",
-		"/F/Love2D Project/FunnyFunky/spineAtlasLoader.lua",
-		"/F/Love2D Project/FunnyFunky/res/bone/boy/spineboy.json",
-		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/Default/Default (Windows).sublime-keymap",
-		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/User/Pretty JSON.sublime-settings",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/SkeletonJson.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/AttachmentLoader.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/BoundingBoxAttachment.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/MeshAttachment.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/RegionAttachment.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/WeightedMeshAttachment.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/AttachmentLoader.lua",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonJson.java",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-js/spine.js",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/AtlasAttachmentLoader.java",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/Animation.java",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/data/BoneData.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/AttachmentType.lua",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/BoneData.java",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/Animation.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/SkinnedMeshAttachment.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/BlendMode.lua",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/AttachmentType.java",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/RegionSequenceAttachment.java",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/WeightedMeshAttachment.java",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/WeightedMeshAttachment.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/AttachmentType.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/RegionAttachment.lua",
+		"/G/love2dproj/FunnyFunky/main.lua",
+		"/G/love2dproj/FunnyFunky/cls/static.lua",
+		"/G/love2dproj/FunnyFunky/cls/player.lua",
+		"/G/love2dproj/FunnyFunky/lib/HC/init.lua",
+		"/G/love2dproj/FunnyFunky/scene/test.lua",
+		"/G/love2dproj/FunnyFunky/lib/spine-love/spine.lua",
+		"/G/love2dproj/FunnyFunky/res/bone/mega/mega.json",
+		"/G/love2dproj/FunnyFunky/scene/game.lua",
+		"/G/love2dproj/FunnyFunky/cls/object.lua",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-csharp/src/SkeletonJson.cs",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/AnimationState.java",
+		"/G/love2dproj/FunnyFunky/cls/stage.lua",
+		"/C/Users/alex/Desktop/bump.lua-demo/lib/bump.lua",
+		"/G/love2dproj/FunnyFunky/cls/background.lua",
+		"/G/love2dproj/FunnyFunky/spineAtlasLoader2.lua",
+		"/G/love2dproj/FunnyFunky/spineAtlasLoader.lua",
+		"/G/love2dproj/box2dhelper/ui/property.lua",
 		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/Pretty JSON/Pretty JSON.sublime-settings",
+		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/User/Pretty JSON.sublime-settings",
 		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/User/Preferences.sublime-settings",
 		"/C/Users/Alexar/Desktop/spine-love/main.lua",
@@ -754,42 +802,7 @@
 		"/F/Love2D Project/box2d/libs/loveframes/objects/text.lua",
 		"/F/Love2D Project/box2d/libs/loveframes/init.lua",
 		"/F/Love2D Project/box2d/ui/world.lua",
-		"/F/Love2D Project/box2d/ui/info.lua",
-		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/Default/Preferences.sublime-settings",
-		"/F/Love2D Project/box2d/libs/loveframes/skins/Blue/skin.lua",
-		"/F/Love2D Project/box2d/ui/system2.lua",
-		"/F/Love2D Project/box2d/ui/layoutMenu.lua",
-		"/F/Love2D Project/box2d/libs/loveframes/objects/menu.lua",
-		"/F/Love2D Project/box2d/libs/loveframes/objects/internal/menuoption.lua",
-		"/F/Love2D Project/box2d/ui/joint.lua",
-		"/F/Love2D Project/box2d/ui/build.lua",
-		"/F/Love2D Project/box2d/ui/about.lua",
-		"/F/Love2D Project/box2d/ui/aboutFrame.lua",
-		"/F/Love2D Project/box2d/ui/unitframe.lua",
-		"/F/Love2D Project/box2d/ui/worldFrame.lua",
-		"/F/Love2D Project/box2d/ui/historyFrame.lua",
-		"/F/Love2D Project/box2d/ui/buildFrame.lua",
-		"/F/Love2D Project/box2d/ui/systemFrame.lua",
-		"/F/Love2D Project/box2d/ui/propertyFrame.lua",
-		"/F/Love2D Project/box2d/libs/bloom.lua",
-		"/C/Users/Alexar/AppData/Local/Temp/Rar$DIa0.790/main.lua",
-		"/C/Users/Alexar/AppData/Local/Temp/Rar$DIa0.015/luagl.h",
-		"/C/Users/Alexar/AppData/Local/Temp/Rar$DIa0.826/luaglu.h",
-		"/F/Love2D Project/pixelRace/scenes/inter.lua",
-		"/F/Love2D Project/pixelRace/libs/gamestate.lua",
-		"/F/Love2D Project/box2d/editor/b2dhelper.lua",
-		"/F/Love2D Project/box2d/editor/box2dhelper/collisionFunc.lua",
-		"/F/Love2D Project/box2d/editor/box2dhelper/collide.lua",
-		"/C/Users/Alexar/Desktop/love编译工具/compile.lua",
-		"/F/Love2D Project/box2d/libs/loveframes/libraries/utf8.lua",
-		"/F/Love2D Project/box2d/editor/reactionFunc.lua",
-		"/F/Love2D Project/box2d/editor/collisionFunc.lua",
-		"/F/Love2D Project/box2d/libs/delaunay.lua",
-		"/F/Love2D Project/box2d/[string \"boot.lua\"]",
-		"/F/Love2D Project/box2d/temp",
-		"/F/Love2D Project/box2d/temp2",
-		"/F/Love2D Project/box2d/modes/fixtureMode.lua",
-		"/F/Love2D Project/box2d/modes/modes/shapeMode.lua"
+		"/F/Love2D Project/box2d/ui/info.lua"
 	],
 	"find":
 	{
@@ -808,9 +821,28 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"group",
-			"atlas",
-			"ctrl+alt+j",
+			"vertice",
+			"weights",
+			"shear",
+			"ik",
+			"readCur",
+			"shear",
+			"linkedmes",
+			"linked",
+			"weightedlink",
+			"linkedmesh",
+			"this",
+			"MeshAttachment",
+			"shear",
+			"ffd",
+			"run",
+			"draw",
+			"gjk",
+			"collideswith",
+			"shape",
+			"print",
+			"aabb",
+			"slide",
 			"require",
 			"bloom",
 			"pres",
@@ -916,26 +948,7 @@
 			"editor.objects",
 			"self.action",
 			"creator",
-			"mouseTest",
-			"self.action",
-			"editor",
-			"inrect",
-			"editor",
-			"mouseY",
-			"mouseX",
-			"love",
-			"editor",
-			"unpdatePopValue",
-			"print",
-			"remove",
-			"anchors",
-			"group[joint.bodies[2]].body",
-			"group[joint.bodies[1]].body",
-			"downForce",
-			"print",
-			"test",
-			"ineditmod",
-			"self.pause"
+			"mouseTest"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -943,6 +956,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"self",
+			"WeightedMeshAttachment",
 			"--setUserData",
 			"editor.action",
 			"self:hide()",
@@ -1068,9 +1083,7 @@
 			"needConfirm",
 			"cmd",
 			"info",
-			"deckEditor.",
-			"",
-			"	{1,\""
+			"deckEditor."
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1086,108 +1099,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "main.lua",
+					"file": "lib/spine-lua/Animation.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 631,
+						"buffer_size": 27217,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								320,
-								320
-							]
-						],
-						"settings":
-						{
-							"origin_encoding": "UTF-8",
-							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/C/Users/Alexar/Desktop/test/skeleton.atlas",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6766,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "scene/game.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1589,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								329,
-								364
-							]
-						],
-						"settings":
-						{
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "lib/spine-love/spine.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 9283,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8967,
-								8967
+								24522,
+								24522
 							]
 						],
 						"settings":
@@ -1197,10 +1121,166 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5428.0,
+						"translation.y": 18741.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "lib/spine-lua/SkeletonJson.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 24065,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11379,
+								11385
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 6914.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "lib/spine-love/spine.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10375,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2589,
+								2589
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 621.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "lib/spine-lua/Skeleton.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8276,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2049,
+								2049
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 5382.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "lib/spine-lua/SkeletonBounds.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6249,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1906,
+								1906
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 345.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 5,
+					"file": "/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonJson.java",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 27983,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								13010,
+								13017
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Java/Java.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 124.0,
+						"translation.y": 7541.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -1208,7 +1288,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 32.0
+		"height": 31.0
 	},
 	"input":
 	{
@@ -1223,11 +1303,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":
@@ -1239,7 +1326,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 313.0
+		"height": 256.0
 	},
 	"output.find_results":
 	{
@@ -1287,7 +1374,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 282.0,
+	"side_bar_width": 224.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

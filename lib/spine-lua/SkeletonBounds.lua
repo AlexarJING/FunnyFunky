@@ -30,7 +30,7 @@
 -------------------------------------------------------------------------------
 
 
-local AttachmentType = require "lib.spine-lua.AttachmentType"
+local AttachmentType = require "lib.spine-lua.Attachment.AttachmentType"
 local utils = require "lib.spine-lua.utils"
 
 local SkeletonBounds = {}

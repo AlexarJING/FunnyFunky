@@ -776,7 +776,7 @@ function Animation.FlipYTimeline.new ()
 
 	return self
 end
---[[
+
 Animation.ShearTimeline = {}
 function Animation.ShearTimeline.new ()
 	local PREV_FRAME_TIME = -3
@@ -809,8 +809,8 @@ function Animation.ShearTimeline.new ()
 		local bone = skeleton.bones[self.boneIndex]
 		
 		if time >= frames[#frames - 2] then -- Time is after last frame.
-			bone.x = bone.x + (bone.data.x + frames[#frames - 1] - bone.x) * alpha
-			bone.y = bone.y + (bone.data.y + frames[#frames] - bone.y) * alpha
+			bone.shearX = bone.shearX + (bone.data.shearX + frames[#frames - 1] - bone.shearX) * alpha
+			bone.shearY = bone.shearY + (bone.data.shearY + frames[#frames] - bone.shearY) * alpha
 			return
 		end
 
@@ -823,11 +823,81 @@ function Animation.ShearTimeline.new ()
 		if percent < 0 then percent = 0 elseif percent > 1 then percent = 1 end
 		percent = self:getCurvePercent(frameIndex / 3 - 1, percent)
 
-		bone.x = bone.x + (bone.data.x + prevFrameX + (frames[frameIndex + FRAME_X] - prevFrameX) * percent - bone.x) * alpha
-		bone.y = bone.y + (bone.data.y + prevFrameY + (frames[frameIndex + FRAME_Y] - prevFrameY) * percent - bone.y) * alpha
+		bone.shearX = bone.shearX + (bone.data.shearX + prevFrameX + (frames[frameIndex + FRAME_X] - prevFrameX) * percent - bone.shearX) * alpha
+		bone.shearY = bone.shearY + (bone.data.shearY + prevFrameY + (frames[frameIndex + FRAME_Y] - prevFrameY) * percent - bone.shearY) * alpha
 	end
 
 	return self
-end]]
+end
+
+Animation.TransFormConstraintTimeline = {}
+function Animation.TransFormConstraintTimeline.new ()
+	local PREV_TIME = -5;
+	local PREV_ROTATE_MIX = -4;
+	local PREV_TRANSLATE_MIX = -3;
+	local PREV_SCALE_MIX = -2;
+	local PREV_SHEAR_MIX = -1;
+	local ROTATE_MIX = 1;
+	local TRANSLATE_MIX = 2;
+	local SCALE_MIX = 3;
+	local SHEAR_MIX = 4;
+
+	local self = Animation.CurveTimeline.new()
+	self.frames ={}
+	self.transformConstraintIndex=0
+	function self:setTransformConstraintIndex(ikConstraint)
+		self.transformConstraintIndex=ikConstraint
+	end
+
+	function self:getTransformConstraintIndex()
+		return self.transformConstraintIndex
+	end
+	function self:getFrames ()
+		return self.frames
+	end
+
+	function self:setFrame (frameIndex, time, rotateMix,translateMix,scaleMix,shearMix)
+		frameIndex = frameIndex * 5
+		self.frames[frameIndex] = time
+		self.frames[frameIndex + 1] = rotateMix;
+		self.frames[frameIndex + 2] = translateMix;
+		self.frames[frameIndex + 3] = scaleMix;
+		self.frames[frameIndex + 4] = shearMix;
+	end
+
+	function self:apply (skeleton, lastTime, time, firedEvents, alpha)
+		local frames = self.frames
+		if time < frames[0] then return end -- Time is before first frame.
+
+		local constraint = skeleton.transformConstraints.get[transformConstraintIndex]
+		
+		if time >= frames[#frames - 5] then -- Time is after last frame.
+			local i = #frames - 1;
+			constraint.rotateMix = constraint.rotateMix+ (frames[i - 3] - constraint.rotateMix) * alpha;
+			constraint.translateMix = constraint.translateMix+(frames[i - 2] - constraint.translateMix) * alpha;
+			constraint.scaleMix = constraint.scaleMix+(frames[i - 1] - constraint.scaleMix) * alpha;
+			constraint.shearMix = constraint.shearMix+(frames[i] - constraint.shearMix) * alpha;
+			return
+		end
+
+		local frame = binarySearch(frames, time, 5);
+		local frameTime = frames[frame];
+		local percent = math.clamp(1 - (time - frameTime) / (frames[frame + PREV_TIME] - frameTime), 0, 1);
+		percent = getCurvePercent(frame / 5 - 1, percent);
+
+		local rotate = frames[frame + PREV_ROTATE_MIX];
+		local translate = frames[frame + PREV_TRANSLATE_MIX];
+		local scale = frames[frame + PREV_SCALE_MIX];
+		local shear = frames[frame + PREV_SHEAR_MIX];
+		constraint.rotateMix = constraint.rotateMix+(rotate + (frames[frame + ROTATE_MIX] - rotate) * percent - constraint.rotateMix) * alpha;
+		constraint.translateMix = constraint.translateMix+(translate + (frames[frame + TRANSLATE_MIX] - translate) * percent - constraint.translateMix)
+			* alpha;
+		constraint.scaleMix = constraint.scaleMix+(scale + (frames[frame + SCALE_MIX] - scale) * percent - constraint.scaleMix) * alpha;
+		constraint.shearMix = constraint.shearMix+(shear + (frames[frame + SHEAR_MIX] - shear) * percent - constraint.shearMix) * alpha;
+	end
+
+	return self
+end
+
 
 return Animation

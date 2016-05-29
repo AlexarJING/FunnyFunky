@@ -2,9 +2,10 @@ local stage=class("stage")
 function stage:init(name)
 	self.name=name
 	self.objects={}
-	self.world=coll(100)
+	self.world=coll(300)
+	--self.world=coll.newWorld()
 	self.camera=Camera.new(-1000,-1000,2000,2000)
-	self.camera:setPosition(400,-100)
+	self.camera:setPosition(300,-100)
 end
 
 
@@ -38,8 +39,8 @@ function stage:onKeyDown()
 
 end
 
-function stage:onKeyPress()
-
+function stage:onKeyPress(key)
+	
 end
 
 function stage:sort(tab)
