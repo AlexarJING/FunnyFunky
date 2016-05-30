@@ -57,7 +57,7 @@ function player:checkOnGround()
 	for shape, delta in pairs(self.stage.world:collisions(self.aabbFoot)) do
        	
        	if math.abs(shape.parent.z-self.z)<120 and shape.part=="foot" then
-   			local offx=delta.x==0 and -self.dx or delta.x
+   			local offx=-self.dx
    			self:moveTo(self.x+(delta.x==0 and 0 or offx) ,self.y,self.z-(delta.y==0 and 0 or self.dz))
    			
    		end
@@ -156,7 +156,7 @@ function player:update(dt)
 	
 	
 	self:unpdateSkeletonState()
-	self:unpdateSkeletonPos(dt)
+	self:unpdateSkeletonPos(dt*2)
 	self.ox=self.x
 	self.oy=self.y
 	self.oz=self.z

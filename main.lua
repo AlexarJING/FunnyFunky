@@ -12,11 +12,11 @@ stage= require "cls/stage"
 Camera= require "lib/gamera"
 
 function love.load() 
-    state={}
+    gameState={}
     for _,name in ipairs(love.filesystem.getDirectoryItems("scene")) do
-        state[name:sub(1,-5)]=require("scene."..name:sub(1,-5))
+        gameState[name:sub(1,-5)]=require("scene."..name:sub(1,-5))
     end
     gamestate.registerEvents()
-    gamestate.switch(state.test)
+    gamestate.switch(gameState.test)
 end
 
