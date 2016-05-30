@@ -28,32 +28,32 @@
 -- OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 -- ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
-local path = string.sub(..., 1, string.len(...) - string.len("spine-love.spine"))
-local spine = {}
+local path = "lib/spine-lua/"
+spine = {}
 
-spine.utils = require (path.."spine-lua.utils")
-spine.SkeletonJson = require (path.."spine-lua.SkeletonJson")
-spine.SkeletonData = require (path.."spine-lua.data.SkeletonData")
-spine.BoneData = require (path.."spine-lua.data.BoneData")
-spine.SlotData = require (path.."spine-lua.data.SlotData")
-spine.IkConstraintData = require (path.."spine-lua.data.IkConstraintData")
-spine.Skin = require (path.."spine-lua.Skin")
-spine.RegionAttachment = require (path.."spine-lua.Attachment.RegionAttachment")
-spine.MeshAttachment = require (path.."spine-lua.Attachment.MeshAttachment")
-spine.WeightedMeshAttachment = require (path.."spine-lua.Attachment.WeightedMeshAttachment")
-spine.Skeleton = require (path.."spine-lua.Skeleton")
-spine.Bone = require (path.."spine-lua.Bone")
-spine.Slot = require (path.."spine-lua.Slot")
-spine.IkConstraint = require (path.."spine-lua.IkConstraint")
-spine.AttachmentType = require (path.."spine-lua.Attachment.AttachmentType")
-spine.AttachmentLoader = require (path.."spine-lua.Attachment.AttachmentLoader")
-spine.Animation = require (path.."spine-lua.Animation")
-spine.AnimationStateData = require (path.."spine-lua.data.AnimationStateData")
-spine.AnimationState = require (path.."spine-lua.AnimationState")
-spine.EventData = require (path.."spine-lua.data.EventData")
-spine.Event = require (path.."spine-lua.Event")
-spine.SkeletonBounds = require (path.."spine-lua.SkeletonBounds")
-spine.BlendMode = require (path.."spine-lua.BlendMode")
+spine.utils = require (path.."utils")
+spine.SkeletonJson = require (path.."SkeletonJson")
+spine.SkeletonData = require (path.."SkeletonData")
+spine.BoneData = require (path.."BoneData")
+spine.SlotData = require (path.."SlotData")
+spine.IkConstraintData = require (path.."IkConstraintData")
+spine.Skin = require (path.."Skin")
+spine.RegionAttachment = require (path.."RegionAttachment")
+spine.MeshAttachment = require (path.."MeshAttachment")
+spine.SkinnedMeshAttachment = require (path.."SkinnedMeshAttachment")
+spine.Skeleton = require (path.."Skeleton")
+spine.Bone = require (path.."Bone")
+spine.Slot = require (path.."Slot")
+spine.IkConstraint = require (path.."IkConstraint")
+spine.AttachmentType = require (path.."AttachmentType")
+spine.AttachmentLoader = require (path.."AttachmentLoader")
+spine.Animation = require (path.."Animation")
+spine.AnimationStateData = require (path.."AnimationStateData")
+spine.AnimationState = require (path.."AnimationState")
+spine.EventData = require (path.."EventData")
+spine.Event = require (path.."Event")
+spine.SkeletonBounds = require (path.."SkeletonBounds")
+spine.BlendMode = require (path.."BlendMode")
 
 spine.utils.readFile = function (fileName, base)
 	local path = fileName
@@ -69,26 +69,25 @@ end
 spine.Skeleton.failed = {} -- Placeholder for an image that failed to load.
 
 spine.Skeleton.new_super = spine.Skeleton.new
-function spine.Skeleton.new (objectName,skeletonData, batchData)
+function spine.Skeleton.new (name,skeletonData, group)
+	
 	local self = spine.Skeleton.new_super(skeletonData)
 
 	-- createImage can customize where images are found.
 	function self:createImage (attachment)
-		if batchData then
-			return batchData.sprite[attachment]
-		else
-			return love.graphics.newImage(
-			"res/bone/"..objectName.."/"..attachment.name .. ".png")
-		end
+		return love.graphics.newImage("res/bone/"..name.."/"..attachment.name .. ".png")
 	end
 
 	-- updateWorldTransform positions images.
 	local updateWorldTransform_super = self.updateWorldTransform
 	function self:updateWorldTransform ()
 		updateWorldTransform_super(self)
-
+		self.skeletonBB:update (self, true)
 		if not self.images then self.images = {} end
 		local images = self.images
+
+		if not self.meshes then self.meshes ={} end
+		local meshes = self.meshes
 
 		if not self.attachments then self.attachments = {} end
 		local attachments = self.attachments
@@ -105,19 +104,8 @@ function spine.Skeleton.new (objectName,skeletonData, batchData)
 				if not image then -- Create new image.
 					image = self:createImage(attachment)
 					if image then
-						local imageWidth
-						local imageHeight
-						if batchData then
-							if image.rotate then
-								_,_,imageHeight,imageWidth=image.quad:getViewport()
-							else
-								_,_,imageWidth,imageHeight=image.quad:getViewport()
-							end
-						else
-							imageWidth = image:getWidth()
-							imageHeight = image:getHeight()
-							
-						end
+						local imageWidth = image:getWidth()
+						local imageHeight = image:getHeight()
 						attachment.widthRatio = attachment.width / imageWidth
 						attachment.heightRatio = attachment.height / imageHeight
 						attachment.originX = imageWidth / 2
@@ -129,6 +117,55 @@ function spine.Skeleton.new (objectName,skeletonData, batchData)
 					images[slot] = image
 					attachments[image] = attachment
 				end
+			elseif attachment.type == spine.AttachmentType.mesh or
+				attachment.type == spine.AttachmentType.skinnedmesh then
+
+				local meshData= meshes[slot]
+				if meshData and attachments[meshData] ~= attachment then
+					meshData=nil
+				end
+				if not meshData then
+					meshData={attachment=attachment,texture=self:createImage(attachment)}
+					
+					local vertices={}
+					for i,v in ipairs(attachment.triangles) do
+				
+						local vertIndexX=v*2+1
+						local vertIndexY=v*2+2
+						table.insert(vertices,{
+							attachment.vertices[vertIndexX],attachment.vertices[vertIndexY],
+							attachment.uvs[vertIndexX],attachment.uvs[vertIndexY],
+							255,255,255,255
+							})
+
+					end
+					
+					meshData.mesh = love.graphics.newMesh(vertices, "triangles")
+					meshData.mesh:setTexture(meshData.texture)
+					meshes[slot] = meshData
+					attachments[meshData] = attachment
+					attachment.mesh = meshData.mesh
+				else
+					local vertices={}
+					for i,v in ipairs(attachment.triangles) do
+		
+						local vertIndexX=v*2+1
+						local vertIndexY=v*2+2
+						table.insert(vertices,{
+							attachment.vertices[vertIndexX],attachment.vertices[vertIndexY],
+							attachment.uvs[vertIndexX],attachment.uvs[vertIndexY],
+							255,255,255,255
+							})
+
+					end
+					for i,v in ipairs(vertices) do
+						attachment.mesh:setVertex(i,v)
+					end
+					
+				end
+
+			elseif attachment.type == spine.AttachmentType.skinnedmesh then
+
 			end
 		end
 	end
@@ -140,59 +177,76 @@ function spine.Skeleton.new (objectName,skeletonData, batchData)
 		local r, g, b, a = self.r * 255, self.g * 255, self.b * 255, self.a * 255
 
 		for i,slot in ipairs(self.drawOrder) do
-			local image = images[slot]
-			if image and image ~= spine.Skeleton.failed then
-				local attachment = slot.attachment
-				local x = slot.bone.worldX + attachment.x * slot.bone.m00 + attachment.y * slot.bone.m01
-				local y = slot.bone.worldY + attachment.x * slot.bone.m10 + attachment.y * slot.bone.m11
-				local rotation = slot.bone.worldRotation + attachment.rotation
-				local xScale = slot.bone.worldScaleX + attachment.scaleX - 1
-				local yScale = slot.bone.worldScaleY + attachment.scaleY - 1
-				if self.flipX then
-					xScale = -xScale
-					rotation = -rotation
-				end
-				if self.flipY then
-					yScale = -yScale
-					rotation = -rotation
-				end
-				love.graphics.setColor(r * slot.r, g * slot.g, b * slot.b, a * slot.a)
-				if slot.data.blendMode == spine.BlendMode.normal then
-					love.graphics.setBlendMode("alpha")
-				elseif slot.data.blendMode == spine.BlendMode.additive then
-					love.graphics.setBlendMode("additive")
-				elseif slot.data.blendMode == spine.BlendMode.multiply then
-					love.graphics.setBlendMode("multiply")
-				elseif slot.data.blendMode == spine.BlendMode.screen then
-					love.graphics.setBlendMode("screen")
-				end
-
-				if batchData then
-					local r= image.rotate and -Pi/2 or 0
-					batchData.batch:add( 
-					self.x + x, 
-					self.y - y, 
-					r-rotation * 3.1415927 / 180,
-					xScale * attachment.widthRatio,
-					yScale * attachment.heightRatio,
-					attachment.originX,
-					attachment.originY)
-				else
+			
+			local attachment = slot.attachment
+			if attachment.type==spine.AttachmentType.region then
+				local image = images[slot]
+				if image and image ~= spine.Skeleton.failed then
+					
+					local x = slot.bone.worldX + attachment.x * slot.bone.m00 + attachment.y * slot.bone.m01
+					local y = slot.bone.worldY + attachment.x * slot.bone.m10 + attachment.y * slot.bone.m11
+					local rotation = slot.bone.worldRotation + attachment.rotation
+					local xScale = slot.bone.worldScaleX + attachment.scaleX - 1
+					local yScale = slot.bone.worldScaleY + attachment.scaleY - 1
+					if self.flipX then
+						xScale = -xScale
+						rotation = -rotation
+					end
+					if self.flipY then
+						yScale = -yScale
+						rotation = -rotation
+					end
+					love.graphics.setColor(r * slot.r, g * slot.g, b * slot.b, a * slot.a)
+					
+					love.graphics.setBlendMode(spine.BlendMode[slot.data.blendMode] or "alpha")
+					
 					love.graphics.draw(image, 
-					self.x + x, 
-					self.y - y, 
-					-rotation * 3.1415927 / 180,
-					xScale * attachment.widthRatio,
-					yScale * attachment.heightRatio,
-					attachment.originX,
-					attachment.originY)
+						self.x + x, 
+						self.y - y, 
+						-rotation * 3.1415927 / 180,
+						xScale * attachment.widthRatio,
+						yScale * attachment.heightRatio,
+						attachment.originX,
+						attachment.originY,
+						attachment.shearX,
+						attachment.shearY)
 				end
+			elseif attachment.type== spine.AttachmentType.mesh 
+				or attachment.type == spine.AttachmentType.weightedmesh then
+				local meshData = self.meshes[slot]
+				if meshData and meshData ~= spine.Skeleton.failed then
+					local attachment = slot.attachment
+					local x = slot.bone.worldX 
+					local y = slot.bone.worldY 
+					local rotation = slot.bone.worldRotation 
+					local xScale = slot.bone.worldScaleX
+					local yScale = slot.bone.worldScaleY
+					if self.flipX then
+						xScale = -xScale
+						rotation = -rotation
+					end
+					if self.flipY then
+						yScale = -yScale
+						rotation = -rotation
+					end
 				
+					love.graphics.setColor(r * slot.r, g * slot.g, b * slot.b, a * slot.a)
+					
+					love.graphics.setBlendMode(spine.BlendMode[slot.data.blendMode] or "alpha")
+					
+					love.graphics.draw(meshData.mesh, 
+						self.x + x, 
+						self.y - y, 
+						-rotation * 3.1415927 / 180,
+						xScale ,
+						-yScale
+						)
+			
+				end
+			elseif attachment== spine.AttachmentType.skinnedmesh then
+
 			end
-			if batchData then
-				love.graphics.setColor(255, 255, 255, 255)
-				love.graphics.draw(batchData.batch)
-			end
+			
 		end
 
 		-- Debug bones.
@@ -274,7 +328,7 @@ function spine.newActor(name,x,y,rot,scale)
 		data,batch=loader.load(name)
 	end
 	local skeletonData = json:readSkeletonDataFile("res/bone/"..name.."/"..name..".json")
-	
+
 	local skeleton = spine.Skeleton.new(name,skeletonData,batch)
 
 	skeleton.x = x
@@ -284,7 +338,10 @@ function spine.newActor(name,x,y,rot,scale)
 
 	local stateData = spine.AnimationStateData.new(skeletonData)
 	local state=spine.AnimationState.new(stateData)
-	return skeleton,skeletonData,state,stateData
+
+	local bb = spine.SkeletonBounds.new ()
+	skeleton.skeletonBB=bb
+	return skeleton,skeletonData,state,stateData,bb
 end
 
 return spine

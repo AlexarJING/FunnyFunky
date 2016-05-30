@@ -29,21 +29,19 @@
 -- ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 
-local SkeletonData = require "lib.spine-lua.data.SkeletonData"
-local BoneData = require "lib.spine-lua.data.BoneData"
-local SlotData = require "lib.spine-lua.data.SlotData"
-local IkConstraintData = require "lib.spine-lua.data.IkConstraintData"
-local EventData = require "lib.spine-lua.data.EventData"
-
-
-local AttachmentLoader = require "lib.spine-lua.Attachment.AttachmentLoader"
-local AttachmentType = require "lib.spine-lua.Attachment.AttachmentType"
-
+local SkeletonData = require "lib.spine-lua.SkeletonData"
+local BoneData = require "lib.spine-lua.BoneData"
+local SlotData = require "lib.spine-lua.SlotData"
 local Skin = require "lib.spine-lua.Skin"
+local AttachmentLoader = require "lib.spine-lua.AttachmentLoader"
 local Animation = require "lib.spine-lua.Animation"
+local IkConstraintData = require "lib.spine-lua.IkConstraintData"
 local IkConstraint = require "lib.spine-lua.IkConstraint"
+local EventData = require "lib.spine-lua.EventData"
 local Event = require "lib.spine-lua.Event"
+local AttachmentType = require "lib.spine-lua.AttachmentType"
 local BlendMode = require "lib.spine-lua.BlendMode"
+
 local SkeletonJson = {}
 function SkeletonJson.new (attachmentLoader)
 	if not attachmentLoader then attachmentLoader = AttachmentLoader.new() end
@@ -63,11 +61,9 @@ function SkeletonJson.new (attachmentLoader)
 	local getArray
 
 	function self:readSkeletonData (jsonText)
-		
 		local skeletonData = SkeletonData.new(self.attachmentLoader)
 
 		local root = spine.utils.readJSON(jsonText)
-
 		if not root then error("Invalid JSON: " .. jsonText, 2) end
 
 		-- Skeleton.
@@ -81,25 +77,40 @@ function SkeletonJson.new (attachmentLoader)
 
 		-- Bones.
 		for i,boneMap in ipairs(root["bones"]) do
-			local boneName = boneMap.name
+			local boneName = boneMap["name"]
 			local parent = nil
-			local parentName = boneMap.parent
+			local parentName = boneMap["parent"]
 			if parentName then
 				parent = skeletonData:findBone(parentName)
 				if not parent then error("Parent bone not found: " .. parentName) end
 			end
 			local boneData = BoneData.new(boneName, parent)
-			boneData.length = (boneMap.length or 0) * self.scale
-			boneData.x = (boneMap.x or 0) * self.scale
-			boneData.y = (boneMap.y or 0) * self.scale
-			boneData.rotation = boneMap.rotation or 0
-			boneData.scaleX = boneMap.scaleX or 1
-			boneData.scaleY = boneMap.scaleY or 1
-			boneData.flipX = boneMap.flipX or false
-			boneData.flipY = boneMap.flipY or false	
-			boneData.inheritScale = boneMap.inheritScale
-			boneData.inheritRotation = boneMap.inheritRotation
-			
+			boneData.length = (boneMap["length"] or 0) * self.scale
+			boneData.x = (boneMap["x"] or 0) * self.scale
+			boneData.y = (boneMap["y"] or 0) * self.scale
+			boneData.rotation = (boneMap["rotation"] or 0)
+			if boneMap["scaleX"] ~= nil then
+				boneData.scaleX = boneMap["scaleX"]
+			else
+				boneData.scaleX = 1
+			end
+			if boneMap["scaleY"] ~= nil then
+				boneData.scaleY = boneMap["scaleY"]
+			else
+				boneData.scaleY = 1
+			end
+			boneData.flipX = boneMap["flipX"] or false
+			boneData.flipY = boneMap["flipY"] or false
+			if boneMap["inheritScale"] == false then
+				boneData.inheritScale = false
+			else
+				boneData.inheritScale = true
+			end
+			if boneMap["inheritRotation"] == false then
+				boneData.inheritRotation = false
+			else
+				boneData.inheritRotation = true
+			end
 			table.insert(skeletonData.bones, boneData)
 		end
 
@@ -122,26 +133,6 @@ function SkeletonJson.new (attachmentLoader)
 				if ikMap["mix"] ~= nil then ikConstraintData.mix = ikMap["mix"] end
 
 				table.insert(skeletonData.ikConstraints, ikConstraintData)
-			end
-		end
-		--------------+++++transform
-		
-		if root["transform"] then
-			for i, transformMap in ipairs(transform) do
-				
-				local transformConstraintData = spine.TransformConstraintData.new(transformMap["name"]);
-
-				transformConstraintData.bone = skeletonData.findBone(transformMap["bone"]);
-				if (not transformConstraintData.bone) then error( "Bone not found: " .. transformMap["bone"]) end;
-
-				transformConstraintData.target = skeletonData.findBone(transformMap["target"]);
-				if (not transformConstraintData.target) then error( "Target bone not found: " .. transformMap["target"]) end;
-
-				transformConstraintData.mix = transformMap.hasOwnProperty("translateMix") and ikMap["translateMix"] or 1;
-				transformConstraintData.x = (transformMap["x"] or 0) * this.scale;
-				transformConstraintData.y = (transformMap["y"] or 0) * this.scale;
-
-				skeletonData.transformConstraints[i] = transformConstraintData;
 			end
 		end
 
@@ -192,19 +183,6 @@ function SkeletonJson.new (attachmentLoader)
 			end
 		end
 
-		----+++++linkedmesh
-
-		if root["linkedMeshed"] then
-			for i , linkedMesh in pairs(root["linkedMeshed"]) do
-				local skin = linkedMesh.skin and skeletonData.findSkin(linkedMesh.skin) or skeletonData.defaultSkin;
-				if not skin then error("Skin not found: " .. linkedMesh.skin) end
-				local parent = skin.getAttachment(linkedMesh.slotIndex, linkedMesh.parent)
-				if not parent then error("Parent mesh not found: " .. linkedMesh.parent) end
-				linkedMesh.mesh.setParentMesh(parent);
-				linkedMesh.mesh.updateUVs();
-			end
-		end
-
 		-- Events.
 		if root["events"] then
 			for eventName,eventMap in pairs(root["events"]) do
@@ -226,21 +204,28 @@ function SkeletonJson.new (attachmentLoader)
 		return skeletonData
 	end
 
-
 	readAttachment = function (name, map)
-
+		name = map["name"] or name
 		local type = AttachmentType[map["type"] or "region"]
 		local path = map["path"] or name
-
+		
 		local scale = self.scale
 		if type == AttachmentType.region then
 			local region = attachmentLoader:newRegionAttachment(type, name, path)
-			if not region then return end
+			if not region then return nil end
 			region.x = (map["x"] or 0) * scale
 			region.y = (map["y"] or 0) * scale
-			region.scaleX = map["scaleX"] or 1
-			region.scaleY = map["scaleY"] or 1
-			region.rotation = map["rotation"] or 0
+			if map["scaleX"] ~= nil then
+				region.scaleX = map["scaleX"]
+			else
+				region.scaleX = 1
+			end
+			if map["scaleY"] ~= nil then
+				region.scaleY = map["scaleY"]
+			else
+				region.scaleY = 1
+			end
+			region.rotation = (map["rotation"] or 0)
 			region.width = map["width"] * scale
 			region.height = map["height"] * scale
 			
@@ -255,13 +240,16 @@ function SkeletonJson.new (attachmentLoader)
 			region:updateOffset()
 			return region
 
+		elseif type == AttachmentType.mesh then
+			local mesh = attachmentLoader:newMeshAttachment(skin, name, path)
+			if not mesh then return nil end
+			mesh.path = path 
+			mesh.vertices = getArray(map, "vertices", scale)
+			mesh.triangles = getArray(map, "triangles", 1)
+			mesh.regionUVs = getArray(map, "uvs", 1)
+			mesh:updateUVs()
 
-		elseif type == AttachmentType.linkedmesh or type==AttachmentType.mesh then
-			local mesh = attachmentLoader:newMeshAttachment(skin, name, path);
-			if not mesh then return end;
-			mesh.path = path; 
-
-			color = map["color"];
+			local color = map["color"]
 			if color then
 				mesh.r = tonumber(color:sub(1, 2), 16) / 255
 				mesh.g = tonumber(color:sub(3, 4), 16) / 255
@@ -269,87 +257,63 @@ function SkeletonJson.new (attachmentLoader)
 				mesh.a = tonumber(color:sub(7, 8), 16) / 255
 			end
 
-			mesh.width = (map["width"] or 0) * scale;
-			mesh.height = (map["height"] or 0) * scale;
+			mesh.hullLength = (map["hull"] or 0) * 2
+			if map["edges"] then mesh.edges = getArray(map, "edges", 1) end
+			mesh.width = (map["width"] or 0) * scale
+			mesh.height = (map["height"] or 0) * scale
+			return mesh
 
-			if not map["parent"] then
-				mesh.vertices = getArray(map, "vertices", scale)
-				mesh.triangles = getArray(map, "triangles", 1)
-				mesh.regionUVs = getArray(map, "uvs", 1)
-				mesh:updateUVs();
-				mesh.hullLength = (map["hull"] or 0) * 2;
-				if map["edges"] then mesh.edges = getArray(map, "edges" , 1) end
-			else 
-				mesh.inheritFFD = map.hasOwnProperty("ffd") and map["ffd"] or true;
-				table.insert(self.linkedMeshes,{
-					mesh= mesh, 
-					skin= map["skin"], 
-					slotIndex= slotIndex, 
-					parent= map["parent"]} )
-			end
-			return mesh;
-		elseif type==AttachmentType.weightedlinkedmesh or type == AttachmentType.weightedmesh then
-			local mesh = attachmentLoader:newWeightedMeshAttachment(skin, name, path);
-			if not mesh then return end
-			mesh.path = path;
+		elseif type == AttachmentType.skinnedmesh then
+			local mesh = self.attachmentLoader.newSkinningMeshAttachment(skin, name, path)
+			if not mesh then return nil end
+			mesh.path = path
 
-			color = map["color"];
-			if color then
-				mesh.r = tonumber(color:sub(1, 2), 16) / 255
-				mesh.g = tonumber(color:sub(3, 4), 16) / 255
-				mesh.b = tonumber(color:sub(5, 6), 16) / 255
-				mesh.a = tonumber(color:sub(7, 8), 16) / 255
-			end
-
-			mesh.width = (map["width"] or 0) * scale;
-			mesh.height = (map["height"] or 0) * scale;
-
-
-			if (not map["parent"]) then
-				local uvs = getArray(map, "uvs", 1)
-				local vertices = getArray(map, "vertices", 1);
-				local weights = {}
-				local bones = {}
-				local i=0
-				local n=#vertices
-
-				repeat
-					i=i+1
-					local boneCount = vertices[i] or 0
-					table.insert(bones, boneCount)
-					local nn=i+boneCount*4
-					repeat
-						print(i)
-						table.insert(bones, vertices[i])
-						table.insert(weights, vertices[i+1]*scale)
-						table.insert(weights, vertices[i+2]*scale)
-						table.insert(weights, vertices[i+3])
-						i=i+4
-					until i<nn
+			local uvs = getArray(map, "uvs", 1)
+			local vertices = getArray(map, "vertices", 1)
+			local weights = {}
+			local bones = {}
+			local verts={}
+			local i, n = 1, #vertices
+			while i < n do
+				local boneCount = vertices[i]
+				i = i + 1
+				table.insert(bones, boneCount)
+				table.insert(verts, vertices[i + 1] * scale)
+				table.insert(verts, vertices[i + 2] * scale)
+				local nn = i + boneCount * 4
+				while i < nn do
+					table.insert(bones, vertices[i])
+					table.insert(weights, vertices[i + 1] * scale)
+					table.insert(weights, vertices[i + 2] * scale)
+					table.insert(weights, vertices[i + 3])
 					
-				until i<n
-				
-				mesh.bones = bones;
-				mesh.weights = weights;
-				mesh.triangles = getArray(map, "triangles",1);
-				mesh.regionUVs = uvs;
-				mesh.updateUVs();
-
-				mesh.hullLength = (map["hull"] or 0) * 2;
-				if (map["edges"]) then mesh.edges = getArray(map, "edges") end;
-			else 
-				mesh.inheritFFD = map.hasOwnProperty("ffd") and map["ffd"] or true;
-				table.insert(self.linkedMeshes, {
-					mesh= mesh, 
-					skin= map["skin"], 
-					slotIndex= slotIndex, 
-					parent= map["parent"]} )
+					i = i + 4
+				end
 			end
-			return mesh;
+			mesh.vertices = verts
+			mesh.bones = bones
+			mesh.weights = weights
+			mesh.triangles = getArray(map, "triangles", 1)
+			mesh.regionUVs = uvs
+			mesh:updateUVs()
+
+			local color = map["color"]
+			if color then
+				mesh.r = tonumber(color:sub(1, 2), 16) / 255
+				mesh.g = tonumber(color:sub(3, 4), 16) / 255
+				mesh.b = tonumber(color:sub(5, 6), 16) / 255
+				mesh.a = tonumber(color:sub(7, 8), 16) / 255
+			end
+
+			mesh.hullLength = (map["hull"] or 0) * 2
+			if map["edges"] then mesh.edges = getArray(map, "edges", 1) end
+			mesh.width = (map["width"] or 0) * scale
+			mesh.height = (map["height"] or 0) * scale
+			return mesh
 
 		elseif type == AttachmentType.boundingbox then
 			local box = attachmentLoader:newBoundingBoxAttachment(type, name)
-			if not box then return end
+			if not box then return nil end
 			local vertices = map["vertices"]
 			for i,point in ipairs(vertices) do
 				table.insert(box.vertices, vertices[i] * scale)
@@ -431,8 +395,9 @@ function SkeletonJson.new (attachmentLoader)
 						table.insert(timelines, timeline)
 						duration = math.max(duration, timeline:getDuration())
 
-					elseif timelineName == "translate" or timelineName == "scale" 
-						or timelineName == "shear" then
+					elseif timelineName == "translate" or 
+						timelineName == "scale" or 
+						timelineName=="shear" then
 						local timeline
 						local timelineScale = 1
 						if timelineName == "scale" then
@@ -475,7 +440,9 @@ function SkeletonJson.new (attachmentLoader)
 						end
 						table.insert(timelines, timeline)
 						duration = math.max(duration, timeline:getDuration())
-						
+
+					elseif timelineName=="shear" then
+
 					else
 						error("Invalid timeline type for a bone: " .. timelineName .. " (" .. boneName .. ")")
 					end
@@ -508,26 +475,6 @@ function SkeletonJson.new (attachmentLoader)
 				duration = math.max(duration, timeline:getDuration())
 			end
 		end
-		------------------------+++++transform constraint
-		local constraintTransform = map["transform"]
-
-		if constraintTransform then
-			for constraintName, constraintMap in pairs (constraintTransform) do
-				local constraint = skeletonData:findTransformConstraint(constraintName)
-				local timeline = Animation.TransformConstraintTimeline.new(constraintMap.size)
-				timeline.transformConstraintIndex =  skeletonData:getTransformConstraints()
-				
-				for frameIndex,valueMap in pairs(constraintMap.child) do
-					timeline:setFrame(frameIndex,valueMap.time,valueMap.rotateMix,valueMap.translateMix,
-						valueMap.scaleMix,valueMap.shearMix)
-					readCureve(timeline,frameIndex,valueMap)
-				end
-				table.insert(timelines, timeline)
-				duration = math.max(duration, timeline.getFrames()[timeline.getFrameCount() * 5 - 5])
-			end
-		end
-
-
 
 		local ffd = map["ffd"]
 		if ffd then
@@ -543,11 +490,13 @@ function SkeletonJson.new (attachmentLoader)
 						timeline.attachment = attachment
 						local isMesh = attachment.type == AttachmentType.mesh
 						local vertexCount
+						
 						if isMesh then
 							vertexCount = #attachment.vertices
 						else
 							vertexCount = #attachment.weights / 3 * 2
 						end
+
 
 						local frameIndex = 0
 						for i,valueMap in ipairs(values) do
@@ -563,26 +512,24 @@ function SkeletonJson.new (attachmentLoader)
 								end
 							else
 								local verticesValue = valueMap["vertices"]
+								
 								local scale = self.scale
 								vertices = {}
 								local start = valueMap["offset"] or 0
-								for ii = 1, start do
+								for ii = 1, vertexCount do
 									vertices[ii] = 0
 								end
-								if scale == 1 then
-									for ii = 1, #verticesValue do
-										vertices[ii + start] = verticesValue[ii]
-									end
-								else
-									for ii = 1, #verticesValue do
-										vertices[ii + start] = verticesValue[ii] * scale
-									end
+								
+								for ii = 1, #verticesValue do
+									vertices[ii + start] = verticesValue[ii] * scale
 								end
+								
+								
 								if isMesh then
 									local meshVertices = attachment.vertices
+
 									for ii = 1, vertexCount do
-										--if not vertices[ii] then vertices[ii]=0 end
-										vertices[ii] = vertices[ii] + meshVertices[ii]
+										vertices[ii] = vertices[ii] + (meshVertices[ii] or 0)
 									end
 								elseif #verticesValue < vertexCount then
 									vertices[vertexCount] = 0

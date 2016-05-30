@@ -607,23 +607,21 @@ function Animation.FfdTimeline.new ()
 		if slot.attachment ~= self.attachment then return end
 
 		local frames = self.frames
-		if time < frames[0] or #frames==0 then return end -- Time is before first frame.
+		if time < frames[0] then return end -- Time is before first frame.
 
 		local frameVertices = self.frameVertices
 		local vertexCount = #frameVertices[0]
-		local vertices = slot.attachmentVertices
-		if  vertices and #vertices ~= vertexCount then
+		local vertices = slot.attachmentVertices or {}
+		if #vertices ~= vertexCount then
 			if #vertices < vertexCount then
 				vertices = {}
 				slot.attachmentVertices = vertices
 			end
 			alpha = 1 -- Don't mix from uninitialized slot vertices.
 		end
-		if not vertices then vertices={} end
 		slot.attachmentVerticesCount = vertexCount
-
-		if time >= frames[#frames - 1] then -- Time is after last frame.
-			local lastVertices = frameVertices[#frames - 1]
+		if time >= frames[#frames] then -- Time is after last frame.
+			local lastVertices = frameVertices[#frames]
 			if alpha < 1 then
 				for i = 1, vertexCount do
 					local vertex = vertices[i]
@@ -898,6 +896,5 @@ function Animation.TransFormConstraintTimeline.new ()
 
 	return self
 end
-
 
 return Animation

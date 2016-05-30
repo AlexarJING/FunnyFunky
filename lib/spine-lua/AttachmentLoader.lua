@@ -29,12 +29,11 @@
 -- ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 
-local AttachmentType = require "lib.spine-lua.Attachment.AttachmentType"
-local RegionAttachment = require "lib.spine-lua.Attachment.RegionAttachment"
-local BoundingBoxAttachment = require "lib.spine-lua.Attachment.BoundingBoxAttachment"
-local MeshAttachment = require "lib.spine-lua.Attachment.MeshAttachment"
-local WeightedMeshAttachment = require "lib.spine-lua.Attachment.WeightedMeshAttachment"
-
+local AttachmentType = require "lib.spine-lua.AttachmentType"
+local RegionAttachment = require "lib.spine-lua.RegionAttachment"
+local BoundingBoxAttachment = require "lib.spine-lua.BoundingBoxAttachment"
+local MeshAttachment = require "lib.spine-lua.MeshAttachment"
+local SkinningMeshAttachment = require "lib.spine-lua.SkinnedMeshAttachment"
 
 local AttachmentLoader = {}
 function AttachmentLoader.new ()
@@ -48,8 +47,8 @@ function AttachmentLoader.new ()
 		return MeshAttachment.new(name)
 	end
 
-	function self:newWeightedMeshAttachment (skin, name, path)
-		return WeightedMeshAttachment.new(name)
+	function self:newSkinningMeshAttachment (skin, name, path)
+		return SkinningMeshAttachment.new(name)
 	end
 
 	function self:newBoundingBoxAttachment (skin, name)

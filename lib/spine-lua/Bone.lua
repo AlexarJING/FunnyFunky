@@ -42,6 +42,7 @@ function Bone.new (data, skeleton, parent)
 		x = 0, y = 0,
 		rotation = 0, rotationIK = 0,
 		scaleX = 1, scaleY = 1,
+		shearX = 0 , shearY =0,
 		flipX = false, flipY = false,
 		m00 = 0, m01 = 0, worldX = 0, -- a b x
 		m10 = 0, m11 = 0, worldY = 0, -- c d y
@@ -116,6 +117,8 @@ function Bone.new (data, skeleton, parent)
 		self.scaleY = data.scaleY
 		self.flipX = data.flipX
 		self.flipY = data.flipY
+		self.shearX = data.shearX
+		self.shearY = data.shearY
 	end
 
 	function self:worldToLocal (worldCoords)

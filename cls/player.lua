@@ -115,7 +115,7 @@ function player:unpdateSkeletonState()
 		if self.state=="fire" then
 			self.skeletonState:addAnimationByName(0, changeState, false)
 		else
-			self.skeletonState:setAnimationByName(0, changeState, false)
+			self.skeletonState:setAnimationByName(0, changeState, true)
 			
 		end
 		self.state=changeState
@@ -191,6 +191,17 @@ function player:roate(dr)
 	self.aabbB:setRotation(self.r)
 end
 
+function player:moveByStick(sx,sy)
+	if sx==sy and sy==0 then return end
+	if math.abs(sx)>0.5 or math.abs(sy)>0.5 then self.isRunning=true end
+	
+	self:move(
+		self.speed* love.timer.getDelta()*sx*2,
+		0,
+		-self.speed* love.timer.getDelta()*sy*2)
+end
+
+
 function player:keydown(dt)
 	
 	local anydown=false
@@ -233,7 +244,7 @@ function player:keydown(dt)
 			self.lastKeyUp=false
 		end
 	else
-		self.isRunning=false
+		self.isRunning=math.abs(self.dx)>self.speed/60 or math.abs(self.dy)>self.speed/60
 		if love.timer.getTime()-self.lastDownTime>0.2 then
 			self.lastDownKey=nil
 		end
@@ -265,6 +276,7 @@ function player:draw()
 		self.aabbHead:draw()
 	end
 	self.skeleton:draw()
+
 end
 
 return player

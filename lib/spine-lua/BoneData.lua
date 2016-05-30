@@ -29,12 +29,22 @@
 -- ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 
-local AttachmentType = {
-	region = 0,
-	boundingbox = 1,
-	mesh = 2,
-	weightedmesh=3,
-	linkedmesh= 4,
-	weightedlinkedmesh= 5
-}
-return AttachmentType
+local BoneData = {}
+function BoneData.new (name, parent)
+	if not name then error("name cannot be nil", 2) end
+
+	local self = {
+		name = name,
+		parent = parent,
+		length = 0,
+		x = 0, y = 0,
+		rotation = 0,
+		scaleX = 1, scaleY = 1,
+		shearX =0 , shearY =0,
+		inheritScale = true,
+		inheritRotation = true
+	}
+
+	return self
+end
+return BoneData

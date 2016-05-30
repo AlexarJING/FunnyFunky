@@ -29,28 +29,25 @@
 -- ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 
-local AttachmentType = require "lib.spine-lua.Attachment.AttachmentType"
+local AttachmentType = require "lib.spine-lua.AttachmentType"
 
-local WeightedMeshAttachment = {}
-function WeightedMeshAttachment.new (name)
+local SkinnedMeshAttachment = {}
+function SkinnedMeshAttachment.new (name)
 	if not name then error("name cannot be nil", 2) end
-
+	
 	local self = {
 		name = name,
-		type = AttachmentType.weightedmesh,
-		bones= nil,
-		weights=nil,
-		vertices = nil,
+		type = AttachmentType.skinnedmesh,
+		bones = nil,
+		weights = nil,
 		uvs = nil,
 		regionUVs = nil,
 		triangles = nil,
 		hullLength = 0,
 		r = 1, g = 1, b = 1, a = 1,
 		path = nil,
-		inheritFFD=true,
-		parentMesh=nil,
 		rendererObject = nil,
-		regionU = 0, regionV = 0, regionU2 = 0, regionV2 = 0, regionRotate = false,
+		regionU = 0, regionV = 0, regionU2 = 1, regionV2 = 1, regionRotate = false,
 		regionOffsetX = 0, regionOffsetY = 0,
 		regionWidth = 0, regionHeight = 0,
 		regionOriginalWidth = 0, regionOriginalHeight = 0,
@@ -78,75 +75,58 @@ function WeightedMeshAttachment.new (name)
 	end
 
 	function self:computeWorldVertices (x, y, slot, worldVertices)
-		local skeletonBones = slot.bone.skeleton.bones;
-		local weights = self.weights;
-		local bones = self.bones;
-
-		local w ,v,b,f ,n ,nn = 0,0,0,0,#bones, nil;
-		local wx, wy, bone, vx, vy, weight;
-		if not slot.attachmentVertices or #slot.attachmentVertices==0 then
-			repeat
-				w=w+2
-				wx = 0;
-				wy = 0;
-				v=v+1
-				nn = bones[v] + v;
-				repeat
-					v=v+1
-					b=b+3
-					bone = skeletonBones[bones[v]];
-					vx = weights[b];
-					vy = weights[b + 1];
-					weight = weights[b + 2];
-					wx = wx+(vx * bone.a + vy * bone.b + bone.worldX) * weight;
-					wy = wy+(vx * bone.c + vy * bone.d + bone.worldY) * weight;
-				until v<nn
-				worldVertices[w] = wx + x;
-				worldVertices[w + 1] = wy + y;
-			until v<n
-			
-		else 
-			local ffd = slot.attachmentVertices;
-			repeat
-				w=w+2
-				wx = 0;
-				wy = 0;
-				v=v+1
-				nn = bones[v] + v;
-				repeat
-					b=b+3
-					f=f+2
-					bone = skeletonBones[bones[v]];
-					vx = weights[b] + ffd[f];
-					vy = weights[b + 1] + ffd[f + 1];
-					weight = weights[b + 2];
-					wx = wx+(vx * bone.a + vy * bone.b + bone.worldX) * weight;
-					wy = wy+(vx * bone.c + vy * bone.d + bone.worldY) * weight;
-				until v<nn
-				
-				worldVertices[w] = wx + x;
-				worldVertices[w + 1] = wy + y;
-
-			until v<n
-
+		local skeletonBones = slot.bone.skeleton.bones
+x,y=slot.bone.skeleton.x,slot.bone.skeleton.y
+		local weights = self.weights
+		local bones = self.bones
+		local w, v, b, f = 1, 1, 1, 1
+		local	n = #bones
+		local wx, wy, bone, vx, vy, weight
+		if slot.attachmentVerticesCount == 0 then
+			while v <= n do
+				wx = 0
+				wy = 0
+				local nn = bones[v] + v
+				v = v + 1
+				while v <= nn do
+					bone = skeletonBones[bones[v] + 1]
+					vx = weights[b]
+					vy = weights[b + 1]
+					weight = weights[b + 2]
+					wx = wx + (vx * bone.m00 + vy * bone.m01 + bone.worldX) * weight
+					wy = wy + (vx * bone.m10 + vy * bone.m11 + bone.worldY) * weight
+					v = v + 1
+					b = b + 3
+				end
+				worldVertices[w] = wx + x
+				worldVertices[w + 1] = wy + y
+				w = w + 2
+			end
+		else
+			local ffd = slot.attachmentVertices
+			while v <= n do
+				wx = 0
+				wy = 0
+				local nn = bones[v] + v
+				v = v + 1
+				while v <= nn do
+					bone = skeletonBones[bones[v] + 1]
+					vx = weights[b] + ffd[f]
+					vy = weights[b + 1] + ffd[f + 1]
+					weight = weights[b + 2]
+					wx = wx + (vx * bone.m00 + vy * bone.m01 + bone.worldX) * weight
+					wy = wy + (vx * bone.m10 + vy * bone.m11 + bone.worldY) * weight
+					v = v + 1
+					b = b + 3
+					f = f + 2
+				end
+				worldVertices[w] = wx + x
+				worldVertices[w + 1] = wy + y
+				w = w + 2
+			end
 		end
-	end
-
-	function self:setParentMesh(parentMesh)
-		self.parentMesh = parentMesh;
-		if parentMesh then 
-			self.bones = parentMesh.bones;
-			self.weights = parentMesh.weights;
-			self.regionUVs = parentMesh.regionUVs;
-			self.triangles = parentMesh.triangles;
-			self.hullLength = parentMesh.hullLength;
-			self.edges = parentMesh.edges;
-			self.width = parentMesh.width;
-			self.height = parentMesh.height;
-		end
-
 	end
 
 	return self
 end
-return WeightedMeshAttachment
+return SkinnedMeshAttachment

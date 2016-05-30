@@ -4,36 +4,28 @@
 		"selected_items":
 		[
 			[
-				"bone",
-				"boneCount"
-			],
-			[
-				"transfo",
-				"transformMap"
-			],
-			[
-				"weighted",
-				"WeightedMeshAttachment"
-			],
-			[
 				"for",
 				"forp	for k,v in pairs()"
 			],
 			[
-				"update",
-				"unpdateSkeletonState"
+				"tab",
+				"table.sort	table.sort"
 			],
 			[
-				"aabb",
-				"aabbFoot"
+				"jump",
+				"jumpSpeed"
 			],
 			[
-				"aabbB",
-				"aabbBody"
+				"attach",
+				"attachment"
 			],
 			[
-				"string",
-				"string.match	(s, pattern [, init])"
+				"newim",
+				"love.graphics.newImage"
+			],
+			[
+				"newb",
+				"love.graphics.newSpriteBatch"
 			],
 			[
 				"getlinew",
@@ -46,10 +38,6 @@
 			[
 				"contac",
 				"contactList"
-			],
-			[
-				"tab",
-				"table.insert	(table, [pos,] value)"
 			],
 			[
 				"new",
@@ -70,10 +58,6 @@
 			[
 				"rollB",
 				"rollback"
-			],
-			[
-				"jump",
-				"jumpLeftKey"
 			],
 			[
 				"current",
@@ -132,6 +116,10 @@
 				"CoordinateInfo"
 			],
 			[
+				"update",
+				"updateTodo"
+			],
+			[
 				"colli",
 				"collisionFunc"
 			],
@@ -146,10 +134,6 @@
 			[
 				"newfil",
 				"love.filesystem.newFileData"
-			],
-			[
-				"newim",
-				"love.image.newImageData"
 			],
 			[
 				"line",
@@ -368,6 +352,10 @@
 				"brightness"
 			],
 			[
+				"string",
+				"string.format	(formatstring, ...)"
+			],
+			[
 				"setp",
 				"love.graphics.setPointStyle"
 			],
@@ -514,57 +502,79 @@
 			[
 				"ply",
 				"love.graphics.polygon"
+			],
+			[
+				"rando",
+				"love.math.random"
+			],
+			[
+				"inmd",
+				"love.image.newImageData"
+			],
+			[
+				"fon",
+				"love.graphics.newFont"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"file": "main.lua",
+			"settings":
+			{
+				"buffer_size": 585,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scene/test.lua",
+			"settings":
+			{
+				"buffer_size": 619,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "cls/background.lua",
+			"settings":
+			{
+				"buffer_size": 175,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "cls/static.lua",
+			"settings":
+			{
+				"buffer_size": 859,
+				"line_ending": "Windows",
+				"name": "static.lua"
+			}
+		},
+		{
+			"file": "cls/player.lua",
+			"settings":
+			{
+				"buffer_size": 5646,
+				"line_ending": "Windows",
+				"name": "player.lua"
+			}
+		},
+		{
 			"file": "lib/spine-lua/Animation.lua",
 			"settings":
 			{
-				"buffer_size": 27217,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "lib/spine-lua/SkeletonJson.lua",
-			"settings":
-			{
-				"buffer_size": 24065,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "lib/spine-love/spine.lua",
-			"settings":
-			{
-				"buffer_size": 10375,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "lib/spine-lua/Skeleton.lua",
-			"settings":
-			{
-				"buffer_size": 8276,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "lib/spine-lua/SkeletonBounds.lua",
-			"settings":
-			{
-				"buffer_size": 6249,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonJson.java",
-			"settings":
-			{
-				"buffer_size": 27983,
+				"buffer_size": 22587,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "cls/object.lua",
+			"settings":
+			{
+				"buffer_size": 803,
+				"line_ending": "Windows"
 			}
 		}
 	],
@@ -664,66 +674,41 @@
 	},
 	"expanded_folders":
 	[
-		"/G/love2dproj/FunnyFunky",
-		"/G/love2dproj/FunnyFunky/lib",
-		"/G/love2dproj/FunnyFunky/lib/spine-love",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment",
-		"/G/love2dproj/FunnyFunky/res",
-		"/G/love2dproj/FunnyFunky/res/bone",
-		"/G/love2dproj/FunnyFunky/res/bone/mega"
+		"/F/Love2D Project/FunnyFunky",
+		"/F/Love2D Project/FunnyFunky/lib",
+		"/F/Love2D Project/FunnyFunky/scene"
 	],
 	"file_history":
 	[
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/SkeletonJson.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/AttachmentLoader.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/BoundingBoxAttachment.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/MeshAttachment.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/RegionAttachment.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/WeightedMeshAttachment.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/AttachmentLoader.lua",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonJson.java",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-js/spine.js",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/AtlasAttachmentLoader.java",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/Animation.java",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/data/BoneData.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/AttachmentType.lua",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/BoneData.java",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/Animation.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/SkinnedMeshAttachment.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/BlendMode.lua",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/AttachmentType.java",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/RegionSequenceAttachment.java",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/WeightedMeshAttachment.java",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/WeightedMeshAttachment.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/AttachmentType.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/RegionAttachment.lua",
-		"/G/love2dproj/FunnyFunky/main.lua",
-		"/G/love2dproj/FunnyFunky/cls/static.lua",
-		"/G/love2dproj/FunnyFunky/cls/player.lua",
-		"/G/love2dproj/FunnyFunky/lib/HC/init.lua",
-		"/G/love2dproj/FunnyFunky/scene/test.lua",
-		"/G/love2dproj/FunnyFunky/lib/spine-love/spine.lua",
-		"/G/love2dproj/FunnyFunky/res/bone/mega/mega.json",
-		"/G/love2dproj/FunnyFunky/scene/game.lua",
-		"/G/love2dproj/FunnyFunky/cls/object.lua",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-csharp/src/SkeletonJson.cs",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/AnimationState.java",
-		"/G/love2dproj/FunnyFunky/cls/stage.lua",
-		"/C/Users/alex/Desktop/bump.lua-demo/lib/bump.lua",
-		"/G/love2dproj/FunnyFunky/cls/background.lua",
-		"/G/love2dproj/FunnyFunky/spineAtlasLoader2.lua",
-		"/G/love2dproj/FunnyFunky/spineAtlasLoader.lua",
-		"/G/love2dproj/box2dhelper/ui/property.lua",
-		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/Pretty JSON/Pretty JSON.sublime-settings",
+		"/C/Users/Alexar/Desktop/spine-love/README.md",
+		"/F/Love2D Project/FunnyFunky/cls/stage.lua",
+		"/F/Love2D Project/box2d/editor/camera.lua",
+		"/F/Love2D Project/FunnyFunky/lib/animation.lua",
+		"/F/Love2D Project/FunnyFunky/cls/background.lua",
+		"/F/Love2D Project/FunnyFunky/cls/object.lua",
+		"/F/Love2D Project/FunnyFunky/scene/test.lua",
+		"/F/Love2D Project/FunnyFunky/scene/game.lua",
+		"/F/Love2D Project/FunnyFunky/lib/spine-love/spine.lua",
+		"/F/Love2D Project/FunnyFunky/lib/spine-lua/Animation.lua",
+		"/F/Love2D Project/FunnyFunky/lib/spine-lua/SkeletonJson.lua",
+		"/F/Love2D Project/FunnyFunky/lib/spine-lua/lib/spine-lua/SkeletonJson.lua",
+		"/F/Love2D Project/FunnyFunky/res/bone/mega/images/mega.json",
+		"/F/Love2D Project/FunnyFunky/res/bone/mega/mega.json",
+		"/F/Love2D Project/FunnyFunky/lib/spineAtlasLoader.lua",
+		"/F/Love2D Project/FunnyFunky/lib/spine-lua/AttachmentType.lua",
+		"/F/Love2D Project/FunnyFunky/res/bone/girl/girl.json",
+		"/F/Love2D Project/FunnyFunky/lib/spine-lua/AnimationState.lua",
+		"/C/Users/Alexar/Desktop/test/skeleton.atlas",
+		"/C/Users/Alexar/Desktop/AtlasImporter.lua",
+		"/F/Love2D Project/FunnyFunky/spineAtlasLoader.lua",
+		"/F/Love2D Project/FunnyFunky/res/bone/boy/spineboy.json",
+		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/Default/Default (Windows).sublime-keymap",
 		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/User/Pretty JSON.sublime-settings",
+		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/Pretty JSON/Pretty JSON.sublime-settings",
 		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/User/Preferences.sublime-settings",
 		"/C/Users/Alexar/Desktop/spine-love/main.lua",
 		"/F/Love2D Project/FunnyFunky/scene/inter.lua",
-		"/F/Love2D Project/FunnyFunky/cls/stage.lua",
-		"/F/Love2D Project/FunnyFunky/cls/object.lua",
-		"/F/Love2D Project/FunnyFunky/scene/game.lua",
 		"/F/Love2D Project/pixelRace/scenes/help.lua",
 		"/F/Love2D Project/FunnyFunky/lib/input.lua",
 		"/F/Love2D Project/FunnyFunky/lib/delay.lua",
@@ -731,9 +716,7 @@
 		"/F/Love2D Project/FunnyFunky/lib/spine-lua/MeshAttachment.lua",
 		"/F/Love2D Project/FunnyFunky/lib/spine-lua/Skeleton.lua",
 		"/F/Love2D Project/FunnyFunky/lib/spine-lua/SkeletonBounds.lua",
-		"/F/Love2D Project/FunnyFunky/lib/spine-love/spine.lua",
 		"/F/Love2D Project/FunnyFunky/main.lua",
-		"/F/Love2D Project/FunnyFunky/lib/spine-lua/SkeletonJson.lua",
 		"/F/Love2D Project/FunnyFunky/lib/spine-lua/SkinnedMeshAttachment.lua",
 		"/F/Love2D Project/FunnyFunky/lib/spine-lua/SlotData.lua",
 		"/F/Love2D Project/FunnyFunky/lib/spine-lua/utils.lua",
@@ -769,7 +752,6 @@
 		"/F/Love2D Project/box2d/conf.lua",
 		"/F/Love2D Project/box2d/editor/box2dhelper/reaction.lua",
 		"/F/Love2D Project/box2d/editor/box2dhelper/materials.lua",
-		"/F/Love2D Project/box2d/editor/camera.lua",
 		"/F/Love2D Project/box2d/modes/testMode.lua",
 		"/F/Love2D Project/box2d/editor/editor/editor.lua",
 		"/F/Love2D Project/box2d/ui/system.lua",
@@ -802,7 +784,30 @@
 		"/F/Love2D Project/box2d/libs/loveframes/objects/text.lua",
 		"/F/Love2D Project/box2d/libs/loveframes/init.lua",
 		"/F/Love2D Project/box2d/ui/world.lua",
-		"/F/Love2D Project/box2d/ui/info.lua"
+		"/F/Love2D Project/box2d/ui/info.lua",
+		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/Default/Preferences.sublime-settings",
+		"/F/Love2D Project/box2d/libs/loveframes/skins/Blue/skin.lua",
+		"/F/Love2D Project/box2d/ui/system2.lua",
+		"/F/Love2D Project/box2d/ui/layoutMenu.lua",
+		"/F/Love2D Project/box2d/libs/loveframes/objects/menu.lua",
+		"/F/Love2D Project/box2d/libs/loveframes/objects/internal/menuoption.lua",
+		"/F/Love2D Project/box2d/ui/joint.lua",
+		"/F/Love2D Project/box2d/ui/build.lua",
+		"/F/Love2D Project/box2d/ui/about.lua",
+		"/F/Love2D Project/box2d/ui/aboutFrame.lua",
+		"/F/Love2D Project/box2d/ui/unitframe.lua",
+		"/F/Love2D Project/box2d/ui/worldFrame.lua",
+		"/F/Love2D Project/box2d/ui/historyFrame.lua",
+		"/F/Love2D Project/box2d/ui/buildFrame.lua",
+		"/F/Love2D Project/box2d/ui/systemFrame.lua",
+		"/F/Love2D Project/box2d/ui/propertyFrame.lua",
+		"/F/Love2D Project/box2d/libs/bloom.lua",
+		"/C/Users/Alexar/AppData/Local/Temp/Rar$DIa0.790/main.lua",
+		"/C/Users/Alexar/AppData/Local/Temp/Rar$DIa0.015/luagl.h",
+		"/C/Users/Alexar/AppData/Local/Temp/Rar$DIa0.826/luaglu.h",
+		"/F/Love2D Project/pixelRace/scenes/inter.lua",
+		"/F/Love2D Project/pixelRace/libs/gamestate.lua",
+		"/F/Love2D Project/box2d/editor/b2dhelper.lua"
 	],
 	"find":
 	{
@@ -821,28 +826,24 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"vertice",
-			"weights",
-			"shear",
-			"ik",
-			"readCur",
-			"shear",
-			"linkedmes",
-			"linked",
-			"weightedlink",
-			"linkedmesh",
-			"this",
-			"MeshAttachment",
-			"shear",
-			"ffd",
-			"run",
-			"draw",
-			"gjk",
-			"collideswith",
-			"shape",
 			"print",
-			"aabb",
-			"slide",
+			"static",
+			"print",
+			"move",
+			"shear",
+			"walk",
+			"readSkeletonDataFile",
+			"spine.utils.readFile",
+			"file",
+			"creat",
+			"trackindex",
+			"onend",
+			"mix",
+			"onend",
+			"on",
+			"group",
+			"atlas",
+			"ctrl+alt+j",
 			"require",
 			"bloom",
 			"pres",
@@ -948,7 +949,11 @@
 			"editor.objects",
 			"self.action",
 			"creator",
-			"mouseTest"
+			"mouseTest",
+			"self.action",
+			"editor",
+			"inrect",
+			"editor"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -956,8 +961,9 @@
 		"regex": false,
 		"replace_history":
 		[
-			"self",
-			"WeightedMeshAttachment",
+			"player",
+			"walk",
+			"move",
 			"--setUserData",
 			"editor.action",
 			"self:hide()",
@@ -1082,8 +1088,7 @@
 			"60",
 			"needConfirm",
 			"cmd",
-			"info",
-			"deckEditor."
+			"info"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1094,34 +1099,33 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 5,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "lib/spine-lua/Animation.lua",
+					"file": "main.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 27217,
+						"buffer_size": 585,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								24522,
-								24522
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"origin_encoding": "UTF-8",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 18741.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 5,
@@ -1129,19 +1133,137 @@
 				},
 				{
 					"buffer": 1,
-					"file": "lib/spine-lua/SkeletonJson.lua",
+					"file": "scene/test.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 24065,
+						"buffer_size": 619,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11379,
-								11385
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 69.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "cls/background.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 175,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "cls/static.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 859,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_name": "static.lua",
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "cls/player.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5646,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								457,
+								457
+							]
+						],
+						"settings":
+						{
+							"auto_name": "player.lua",
+							"origin_encoding": "UTF-8",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "lib/spine-lua/Animation.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 22587,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1151,27 +1273,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 6914.0,
+						"translation.y": 1311.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "lib/spine-love/spine.lua",
+					"buffer": 6,
+					"file": "cls/object.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10375,
+						"buffer_size": 803,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2589,
-								2589
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1180,107 +1302,11 @@
 							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": -0.0,
-						"translation.y": 621.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "lib/spine-lua/Skeleton.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8276,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2049,
-								2049
-							]
-						],
-						"settings":
-						{
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": -0.0,
-						"translation.y": 5382.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "lib/spine-lua/SkeletonBounds.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6249,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1906,
-								1906
-							]
-						],
-						"settings":
-						{
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": -0.0,
+						"translation.x": 0.0,
 						"translation.y": 345.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
-				{
-					"buffer": 5,
-					"file": "/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonJson.java",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 27983,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								13010,
-								13017
-							]
-						],
-						"settings":
-						{
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/Java/Java.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 124.0,
-						"translation.y": 7541.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]
@@ -1288,7 +1314,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 31.0
+		"height": 32.0
 	},
 	"input":
 	{
@@ -1303,18 +1329,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.5,
 			1.0
 		],
 		"rows":
@@ -1326,7 +1345,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 256.0
+		"height": 167.0
 	},
 	"output.find_results":
 	{
@@ -1374,7 +1393,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 224.0,
+	"side_bar_width": 282.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

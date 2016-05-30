@@ -30,9 +30,9 @@
 -------------------------------------------------------------------------------
 
 local BlendMode = {
-	normal = 0,
-	additive = 1,
-	multiply = 2,
-	screen = 3
+	[0] = "alpha",
+	[1] = "additive",
+	[2] = "multyply",
+	[3] = "screen"
 }
 return BlendMode

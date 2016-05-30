@@ -29,8 +29,7 @@
 -- ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 
-
-local AttachmentType = require "lib.spine-lua.Attachment.AttachmentType"
+local AttachmentType = require "lib.spine-lua.AttachmentType"
 local utils = require "lib.spine-lua.utils"
 
 local SkeletonBounds = {}
@@ -41,7 +40,7 @@ function SkeletonBounds.new ()
 		minX = 0, minY = 0, maxX = 0, maxY = 0
 	}
 
-	function aabbCompute ()
+	local function aabbCompute ()
 		local polygons = self.polygons
 		local minX, minY, maxX, maxY = 9999999, 9999999, -9999999, -9999999
 		for i,vertices in ipairs(polygons) do

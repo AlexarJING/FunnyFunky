@@ -32,12 +32,12 @@
 local Bone = require "lib.spine-lua.Bone"
 local Slot = require "lib.spine-lua.Slot"
 local IkConstraint = require "lib.spine-lua.IkConstraint"
-local AttachmentLoader = require "lib.spine-lua.Attachment.AttachmentLoader"
+local AttachmentLoader = require "lib.spine-lua.AttachmentLoader"
 
 local Skeleton = {}
 function Skeleton.new (skeletonData)
 	if not skeletonData then error("skeletonData cannot be nil", 2) end
-
+	
 	local self = {
 		data = skeletonData,
 		bones = {},
