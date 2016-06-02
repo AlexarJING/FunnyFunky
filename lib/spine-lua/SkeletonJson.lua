@@ -291,6 +291,7 @@ function SkeletonJson.new (attachmentLoader)
 				end
 			end
 			mesh.vertices = verts
+			mesh.rawVertices=vertices
 			mesh.bones = bones
 			mesh.weights = weights
 			mesh.triangles = getArray(map, "triangles", 1)

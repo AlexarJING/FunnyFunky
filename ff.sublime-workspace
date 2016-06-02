@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"for",
+				"forp	for k,v in pairs()"
+			],
+			[
 				"bone",
 				"boneCount"
 			],
@@ -14,10 +18,6 @@
 			[
 				"weighted",
 				"WeightedMeshAttachment"
-			],
-			[
-				"for",
-				"forp	for k,v in pairs()"
 			],
 			[
 				"update",
@@ -520,36 +520,34 @@
 	"buffers":
 	[
 		{
-			"file": "cls/player.lua",
-			"settings":
-			{
-				"buffer_size": 5935,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "cls/roleState.lua",
-			"settings":
-			{
-				"buffer_size": 918,
-				"line_ending": "Windows",
-				"name": "roleState.lua"
-			}
-		},
-		{
-			"file": "cls/actionState.lua",
-			"settings":
-			{
-				"buffer_size": 93,
-				"line_ending": "Windows",
-				"name": "actionState.lua"
-			}
-		},
-		{
 			"file": "main.lua",
 			"settings":
 			{
 				"buffer_size": 597,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "cls/player2.lua",
+			"settings":
+			{
+				"buffer_size": 5360,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "cls/createPlayerState.lua",
+			"settings":
+			{
+				"buffer_size": 1903,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scene/test.lua",
+			"settings":
+			{
+				"buffer_size": 1049,
 				"line_ending": "Windows"
 			}
 		}
@@ -650,14 +648,31 @@
 	},
 	"expanded_folders":
 	[
-		"/G/love2dproj/FunnyFunky",
-		"/G/love2dproj/FunnyFunky/cls",
-		"/G/love2dproj/FunnyFunky/scene"
+		"/G/love2dproj/FunnyFunky"
 	],
 	"file_history":
 	[
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/MeshAttachment.lua",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/Animation.java",
+		"/G/love2dproj/FunnyFunky/lib/spine-lua/SkinnedMeshAttachment.lua",
+		"/G/love2dproj/FunnyFunky/cls/player2.lua",
 		"/G/love2dproj/FunnyFunky/lib/spine-love/spine.lua",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/SkeletonJson.lua",
+		"/G/love2dproj/FunnyFunky/cls/player.lua",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-lua/SkinnedMeshAttachment.lua",
+		"/G/love2dproj/FunnyFunky/cls/roleState.lua",
+		"/G/love2dproj/FunnyFunky/cls/createPlayerState.lua",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-js/spine-canvas.js",
+		"/G/love2dproj/FunnyFunky/conf.lua",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/WeightedMeshAttachment.java",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-js/spine.js",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx-tests/src/com/esotericsoftware/spine/AttachmentTimelineTests.java",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonMeshRenderer.java",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonRenderer.java",
+		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/Updatable.java",
+		"/G/love2dproj/FunnyFunky/scene/test.lua",
+		"/G/love2dproj/FunnyFunky/res/bone/girl/girl.json",
+		"/G/love2dproj/FunnyFunky/cls/actionState.lua",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/Animation.lua",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/Skeleton.lua",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/SkeletonBounds.lua",
@@ -668,25 +683,19 @@
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/RegionAttachment.lua",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/WeightedMeshAttachment.lua",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/AttachmentLoader.lua",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-js/spine.js",
 		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/AtlasAttachmentLoader.java",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/Animation.java",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/data/BoneData.lua",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/Attachment/AttachmentType.lua",
 		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/BoneData.java",
-		"/G/love2dproj/FunnyFunky/lib/spine-lua/SkinnedMeshAttachment.lua",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/BlendMode.lua",
 		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/AttachmentType.java",
 		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/RegionSequenceAttachment.java",
-		"/C/Users/alex/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/attachments/WeightedMeshAttachment.java",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/WeightedMeshAttachment.lua",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/AttachmentType.lua",
 		"/G/love2dproj/FunnyFunky/lib/spine-lua/RegionAttachment.lua",
 		"/G/love2dproj/FunnyFunky/main.lua",
 		"/G/love2dproj/FunnyFunky/cls/static.lua",
-		"/G/love2dproj/FunnyFunky/cls/player.lua",
 		"/G/love2dproj/FunnyFunky/lib/HC/init.lua",
-		"/G/love2dproj/FunnyFunky/scene/test.lua",
 		"/G/love2dproj/FunnyFunky/res/bone/mega/mega.json",
 		"/G/love2dproj/FunnyFunky/scene/game.lua",
 		"/G/love2dproj/FunnyFunky/cls/object.lua",
@@ -770,20 +779,7 @@
 		"/C/Users/Alexar/AppData/Roaming/LOVE/box2d/abc.proj",
 		"/F/Love2D Project/box2d/libs/loveframes/objects/frame.lua",
 		"/F/Love2D Project/box2d/editor/log.lua",
-		"/F/Love2D Project/box2d/editor/keyconf.lua",
-		"/F/Love2D Project/box2d/libs/loveframes/objects/tabs.lua",
-		"/F/Love2D Project/box2d/ui/editMenu.lua",
-		"/C/Users/Alexar/AppData/Roaming/LOVE/box2d/abc/units/test.lua",
-		"/F/Love2D Project/box2d/editor/box2dhelper/collision.lua",
-		"/F/Love2D Project/box2d/editor/box2dhelper/editor/box2dhelper/reaction.lua",
-		"/F/Love2D Project/box2d/editor/materials.lua",
-		"/F/Love2D Project/box2d/ui/ui/property.lua",
-		"/F/Love2D Project/box2d/libs/loveframes/objects/grid.lua",
-		"/F/Love2D Project/tetris/main.lua",
-		"/F/Love2D Project/box2d/ui/fileMenu.lua",
-		"/F/Love2D Project/box2d/ui/help.lua",
-		"/F/Love2D Project/box2d/libs/loveframes/objects/text.lua",
-		"/F/Love2D Project/box2d/libs/loveframes/init.lua"
+		"/F/Love2D Project/box2d/editor/keyconf.lua"
 	],
 	"find":
 	{
@@ -802,6 +798,15 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"mesh",
+			"ffd",
+			"weight",
+			"updateCache",
+			"computeWorldVertices",
+			"weightedmesh",
+			"updateworldtransform",
+			"updateworld",
+			"update",
 			"vertice",
 			"weights",
 			"shear",
@@ -920,16 +925,7 @@
 			"setpos",
 			"focus",
 			"hover",
-			"button",
-			"rest",
-			"mousetest",
-			"editor",
-			"polygon",
-			"polygonr",
-			"editor.objects",
-			"self.action",
-			"creator",
-			"mouseTest"
+			"button"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1080,95 +1076,6 @@
 			[
 				{
 					"buffer": 0,
-					"file": "cls/player.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5935,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1503,
-								1503
-							]
-						],
-						"settings":
-						{
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1012.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "cls/roleState.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 918,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								283,
-								283
-							]
-						],
-						"settings":
-						{
-							"auto_name": "roleState.lua",
-							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "cls/actionState.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 93,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								93,
-								93
-							]
-						],
-						"settings":
-						{
-							"auto_name": "actionState.lua",
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
 					"file": "main.lua",
 					"semi_transient": false,
 					"settings":
@@ -1180,14 +1087,104 @@
 						"selection":
 						[
 							[
-								465,
-								465
+								597,
+								597
 							]
 						],
 						"settings":
 						{
 							"origin_encoding": "ASCII",
 							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "cls/player2.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5360,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1489,
+								1489
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "UTF-8",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1026.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "cls/createPlayerState.lua",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1903,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1173.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "scene/test.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1049,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								526,
+								526
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

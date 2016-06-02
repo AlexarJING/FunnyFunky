@@ -117,8 +117,7 @@ function spine.Skeleton.new (name,skeletonData, group)
 					images[slot] = image
 					attachments[image] = attachment
 				end
-			elseif attachment.type == spine.AttachmentType.mesh or
-				attachment.type == spine.AttachmentType.skinnedmesh then
+			elseif attachment.type == spine.AttachmentType.mesh then
 
 				local meshData= meshes[slot]
 				if meshData and attachments[meshData] ~= attachment then
@@ -145,10 +144,23 @@ function spine.Skeleton.new (name,skeletonData, group)
 					meshes[slot] = meshData
 					attachments[meshData] = attachment
 					attachment.mesh = meshData.mesh
-				else
+
+					
+				end
+
+			elseif attachment.type == spine.AttachmentType.skinnedmesh then
+				
+				local meshData= meshes[slot]
+				if meshData and attachments[meshData] ~= attachment then
+					meshData=nil
+				end
+				if not meshData then
+					
+					meshData={attachment=attachment,texture=self:createImage(attachment)}
+					local attachmentvert={}
 					local vertices={}
 					for i,v in ipairs(attachment.triangles) do
-		
+				
 						local vertIndexX=v*2+1
 						local vertIndexY=v*2+2
 						table.insert(vertices,{
@@ -156,16 +168,16 @@ function spine.Skeleton.new (name,skeletonData, group)
 							attachment.uvs[vertIndexX],attachment.uvs[vertIndexY],
 							255,255,255,255
 							})
-
-					end
-					for i,v in ipairs(vertices) do
-						attachment.mesh:setVertex(i,v)
+						table.insert(attachmentvert,attachment.vertices[vertIndexX])
+						table.insert(attachmentvert,attachment.vertices[vertIndexY])
 					end
 					
+					meshData.mesh = love.graphics.newMesh(vertices, "triangles")
+					meshData.mesh:setTexture(meshData.texture)
+					meshes[slot] = meshData
+					attachments[meshData] = attachment
+					attachment.mesh = meshData.mesh
 				end
-
-			elseif attachment.type == spine.AttachmentType.skinnedmesh then
-
 			end
 		end
 	end
@@ -323,6 +335,7 @@ local loader= require "lib/spineAtlasLoader"
 function spine.newActor(name,x,y,rot,scale)
 	local json = spine.SkeletonJson.new()
 	json.scale = scale
+
 	local data,batch
 	if love.filesystem.exists("res/bone/"..name.."/"..name..".atlas") then
 		data,batch=loader.load(name)
@@ -333,7 +346,7 @@ function spine.newActor(name,x,y,rot,scale)
 
 	skeleton.x = x
 	skeleton.y = y
-
+	skeleton.scale=scale
 	skeleton:setToSetupPose()
 
 	local stateData = spine.AnimationStateData.new(skeletonData)
