@@ -4,7 +4,7 @@ local static= class("static",object)
 function static:init(stage,x,y,z,texture)
 	self.class.super.init(self,stage,x,y,z,texture)
 	
-	
+	self.tl=30
 	
 	self.aabbBody=stage.world:rectangle(
 		self.x,self.y+self.z/4-self.th,
@@ -12,14 +12,14 @@ function static:init(stage,x,y,z,texture)
 	self.aabbBody.parent=self
 	self.aabbBody.part="body"
 	self.aabbHead=stage.world:rectangle(
-		self.x,self.y+self.z/4-self.th-30,
-		self.tw,30)
+		self.x,self.y+self.z/4-self.th-self.tl,
+		self.tw,self.tl)
 	self.aabbHead.parent=self
 	self.aabbHead.part="head"
 
 	self.aabbFoot=stage.world:rectangle(
-		self.x,self.y+self.z/4-30,
-		self.tw,30)
+		self.x,self.y+self.z/4-self.tl,
+		self.tw,self.tl)
 	self.aabbFoot.parent=self
 	self.aabbFoot.part="foot"
 	

@@ -30,7 +30,7 @@ function player:init(stage,x,y,z,texture)
 	self.speed=300
 	self.lastDownTime=0
 	self.isRunning=false
-	self.state="idle"
+	self.state="idle1"
 	self.dx=0
 	self.dy=0
 	self.dz=0
@@ -100,7 +100,7 @@ function player:unpdateSkeletonState()
 	local changeState
 
 	if self.dx==0 and self.dy==0 and self.dz==0 then
-		changeState="idle"
+		changeState="idle1"
 		
 	elseif not self.onGround then
 		changeState="jump"

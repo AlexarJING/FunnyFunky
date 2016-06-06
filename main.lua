@@ -1,6 +1,5 @@
 require "lib/util"
 coll=require "lib/HC"
---coll=require "lib/bump"
 class=require "lib/middleclass"
 spine=require "lib/spine-love.spine"
 ui= require "lib/SUIT"

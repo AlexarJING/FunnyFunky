@@ -74,9 +74,10 @@ function SkinnedMeshAttachment.new (name)
 		end
 	end
 
-	function self:computeWorldVertices (x, y, slot, worldVertices)
+	function self:computeWorldVertices (slot,fx,fy)
+		local worldVertices = {}
 		local skeletonBones = slot.bone.skeleton.bones
-x,y=slot.bone.skeleton.x,slot.bone.skeleton.y
+		local x,y=slot.bone.worldX,slot.bone.worldY
 		local weights = self.weights
 		local bones = self.bones
 		local w, v, b, f = 1, 1, 1, 1
@@ -120,11 +121,12 @@ x,y=slot.bone.skeleton.x,slot.bone.skeleton.y
 					b = b + 3
 					f = f + 2
 				end
-				worldVertices[w] = wx + x
-				worldVertices[w + 1] = wy + y
+				worldVertices[w +1] = fx and -wx + x or wx -x
+				worldVertices[w ] = fy and wy-y or -wy + y
 				w = w + 2
 			end
 		end
+		return worldVertices
 	end
 
 	return self

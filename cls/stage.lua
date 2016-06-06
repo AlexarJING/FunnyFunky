@@ -4,12 +4,19 @@ function stage:init(name)
 	self.objects={}
 	self.world=coll(300)
 	--self.world=coll.newWorld()
-	self.camera=Camera.new(-1000,-1000,2000,2000)
-	self.camera:setPosition(300,-100)
+	self.camera=Camera.new(0,-900,2200,1200)
+	self.camera:setPosition(0,0)
+end
+
+function stage:setCameraFocus(target)
+	self.focusTarget=target
 end
 
 
 function stage:update(dt)
+	if self.focusTarget then 
+		self.camera:setPosition(self.focusTarget.x,self.focusTarget.y+self.focusTarget.z/2)
+	end
 	for i=#self.objects,1,-1 do
 		local obj=self.objects[i]
 		if not obj.destroyed then

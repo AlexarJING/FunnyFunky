@@ -1,25 +1,33 @@
 local scene = gamestate.new()
-local stage = require "cls/stage"("test")
+local Stage = require "cls/stage"
 local bg = require "cls/background"
 local static = require "cls/static"
 local player = require "cls/player2"
 local joystick = require "cls/joystick"
 local Button = require "cls/button"
-local buttonA = Button(500,500,100,80,"jump")
-local buttonB = Button(650,500,100,80,"action")
+local buttonA = Button(1100,500,100,80,"jump")
+local buttonB = Button(1000,600,100,80,"action")
+
+local debugfont  = love.graphics.newFont(12)
 
 function scene:init()
-	local cat =  bg(stage,0,0,"cat")
+	self.stage = Stage("test")
+	local stage= self.stage
+	local bg =  bg(stage,0,300,"rexue")
 	local cat2 = static(stage, 300,0,0,"cat")
 
 	cat2 = static(stage, 100,0,300,"cat")
-	hero = player(stage, 500,0,0,"mega")
+	hero = player(stage, 600,0,0,"mega")
+	self.stage:setCameraFocus(hero)
+	
+
+
 	joystick:new()
 	buttonA.onClick=function(b)
 		hero:jump()
 	end
 	buttonB.onClick=function(b)
-		hero:fire()
+		hero:attack()
 	end
 end 
 
@@ -33,18 +41,24 @@ end
 
 
 function scene:draw()
-	stage:draw()
+	self.stage:draw()
 	joystick:draw()
 	buttonA:draw()
 	buttonB:draw()
+	love.graphics.setColor(255, 0, 0, 255)
+	love.graphics.setFont(debugfont)
+	love.graphics.print("Mega State: "..hero.state.current.name, 100,100)
+	love.graphics.print("isAttacking: "..tostring(hero.isAttacking), 100,130)
+	love.graphics.print("attack level: "..tostring(hero.attackLevel), 100,160)
 end
 
 function scene:update(dt)
-	stage:update(dt)
+	self.stage:update(dt)
 	joystick:update()
 	hero:moveByStick(joystick.vx,joystick.vy)
 	buttonA:update()
 	buttonB:update()
+	
 end 
 
 

@@ -17,8 +17,12 @@ end
 function joystick:limitToRound()
 	local dist=math.getDistance(self.cx,self.cy,self.sx,self.sy)
 	if  dist>self.limit then
+		local dx = (self.sx-self.cx)* self.limit/dist
+		local dy = (self.sy-self.cy)* self.limit/dist
 		self.sx= self.cx+(self.sx-self.cx)* self.limit/dist
 		self.sy= self.cy+(self.sy-self.cy)* self.limit/dist
+		self.cx=self.cx+(self.sx-self.cx)* self.limit/dist/10
+		self.cy=self.cy+(self.sy-self.cy)* self.limit/dist/10
 	end
 end
 
@@ -63,7 +67,7 @@ function joystick:draw()
 		love.graphics.setColor(200, 200,200, 255)
 		love.graphics.circle("fill", self.sx, self.sy, self.stickSize)
 	end
-	love.graphics.print(string.format("axis x: %0.2f; axis y: %0.2f",self.vx,self.vy),100,100)
+	--love.graphics.print(string.format("axis x: %0.2f; axis y: %0.2f",self.vx,self.vy),100,100)
 end
 
 return joystick
