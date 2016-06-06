@@ -37,8 +37,8 @@ function M.update(state)
 	end
 end
 
-function M.switch(state , from , to)
-	if from == to then return end
+function M.switch(state , from , to, force)
+	if from == to and (not force) then return end
 	state.current=to
 	if from and from.onExit then from.onExit(state.role,to) end 
 	if to.onEnter then to.onEnter(state.role,from) end

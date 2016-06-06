@@ -2,7 +2,7 @@ local states={}
 
 states.idle={
 	name="idle",
-	relative={"walk","run","jump","attack_1","attack_2","attack_3"},
+	relative={"attacked_back_light","walk","run","jump","attack_1","attack_2","attack_3"},
 	onEnter = function(role) 
 		role.skeletonState:setAnimationByName(0 ,"idle1", true)
  	end,
@@ -46,8 +46,10 @@ states.attack_1={
 	name="attack_1",
 	relative={},
 	onEnter = function(role) 
+		role.aabbPunchLeft.enabled=true
 		role.skeletonState:setAnimationByName(0 ,"hita1", false).onEnd =function()
 			role.isAttacking=false
+			role.aabbPunchLeft.enabled=false
 		end
  	end,
 	condition = function(role) 
@@ -65,8 +67,10 @@ states.attack_2={
 	name="attack_2",
 	relative={},
 	onEnter = function(role) 
+		role.aabbPunchLeft.enabled=true
 		role.skeletonState:setAnimationByName(0 ,"hitb1", false).onEnd =function()
 			role.isAttacking=false
+			role.aabbPunchLeft.enabled=false
 		end
 		role.nextAttack=false
  	end,
@@ -84,9 +88,11 @@ states.attack_2={
 states.attack_3={
 	name="attack_3",
 	relative={},
-	onEnter = function(role) 
+	onEnter = function(role)
+		role.aabbPunchRight.enabled=true
 		role.skeletonState:setAnimationByName(0 ,"hitc1", false).onEnd =function()
 			role.isAttacking=false
+			role.aabbPunchRight.enabled=false
 		end
 		role.nextAttack=false
  	end,
@@ -100,4 +106,62 @@ states.attack_3={
 		end
 	end
 }
+
+states.attacked_front_light={
+	name="attacked_front_light",
+	relative={},
+	
+	onEnter = function(role)
+		role.skeletonState:setAnimationByName(0 ,"behit1", false).onEnd =function()
+			role.isHit=false
+		end
+		role.isHit=true
+ 	end,
+	condition = function(role) 
+		return role.isHit
+	end 
+}
+
+states.attacked_front_heavy={
+	name="attacked_front_heavy",
+	relative={},
+	onEnter = function(role) 
+		role.skeletonState:setAnimationByName(0 ,"behit2", false).onEnd =function()
+			role.isHit=false
+		end
+		role.isHit=true
+ 	end,
+	condition = function(role) 
+		return role.isHit
+	end 
+}
+
+states.attacked_back_light={
+	name="attacked_back_light",
+	relative={},
+	onEnter = function(role)
+		role.skeletonState:setAnimationByName(0 ,"behit2", false).onEnd =function()
+			role.isHit=false
+		end
+		role.isHit=true
+ 	end,
+	condition = function(role) 
+		return role.isHit
+	end 
+}
+
+states.attacked_back_heavy={
+	name="attacked_back_heavy",
+	relative={},
+	onEnter = function(role) 
+		role.skeletonState:setAnimationByName(0 ,"behit1", false).onEnd =function()
+			role.isHit=false
+		end
+		role.isHit=true
+ 	end,
+	condition = function(role) 
+		return role.isHit
+	end 
+}
+
 return states

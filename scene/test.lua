@@ -2,7 +2,8 @@ local scene = gamestate.new()
 local Stage = require "cls/stage"
 local bg = require "cls/background"
 local static = require "cls/static"
-local player = require "cls/player2"
+local player = require "cls/player"
+local npc = require "cls/npc"
 local joystick = require "cls/joystick"
 local Button = require "cls/button"
 local buttonA = Button(1100,500,100,80,"jump")
@@ -14,12 +15,12 @@ function scene:init()
 	self.stage = Stage("test")
 	local stage= self.stage
 	local bg =  bg(stage,0,300,"rexue")
-	local cat2 = static(stage, 300,0,0,"cat")
-
-	cat2 = static(stage, 100,0,300,"cat")
+	--local cat2 = static(stage, 300,0,0,"cat")
+	--cat2 = static(stage, 100,0,300,"cat")
 	hero = player(stage, 600,0,0,"mega")
 	self.stage:setCameraFocus(hero)
 	
+	local n1 = npc(stage, 200,0,200,"mega")
 
 
 	joystick:new()

@@ -1,13 +1,37 @@
 local object = require "cls/object"
-local player= class("player",object)
+local npc= class("npc",object)
 local stateSystem = require "lib/roleState"
 local states = require "cls/megaState"
 
-function player:init(stage,x,y,z,texture)
+local function getSlotPos(slot,s)
+	local attachment = slot.attachment
+	local ax,ay = attachment.x or 0,attachment.y or 0
+	local ar = attachment.rotation or 0
+	local asx = attachment.scaleX or 1
+	local asy = attachment.scaleY or 1
+	local x = slot.bone.worldX + ax* slot.bone.m00 + ay * slot.bone.m01
+	local y = slot.bone.worldY + ax * slot.bone.m10 + ay * slot.bone.m11
+	local rotation = slot.bone.worldRotation + ar
+	local xScale = slot.bone.worldScaleX + asx - 1
+	local yScale = slot.bone.worldScaleY + asy - 1
+	if s.flipX then
+		xScale = -xScale
+		rotation = -rotation
+	end
+	if s.flipY then
+		yScale = -yScale
+		rotation = -rotation
+	end
+	return s.x +x ,s.y-y
+end
+
+
+function npc:init(stage,x,y,z,texture)
 	self.class.super.init(self,stage,x,y,z,texture)
 	local skeleton,skeletonData,state,stateData = spine.newActor(texture,500,300,0,0.3)
 	self.skeleton=skeleton
 	self.skeletonState=state
+
 	self.tw=70
 	self.th=120
 	self.tl=10
@@ -25,7 +49,7 @@ function player:init(stage,x,y,z,texture)
 	self:aabbInit()
 end
 
-function player:initProperties()
+function npc:initProperties()
 	self.dx=0
     self.dy=0
     self.dz=0
@@ -39,7 +63,7 @@ function player:initProperties()
 	self.attackLevel = 1
 end
 
-function player:regState()
+function npc:regState()
 	self.state = stateSystem.init(self)
 	for name,action in pairs(states) do
 		self.state:reg(action,name=="idle")
@@ -48,7 +72,7 @@ function player:regState()
 end
 
 
-function player:aabbInit()
+function npc:aabbInit()
 	local stage = self.stage
 	self.aabbBody=stage.world:rectangle(
 		self.x,self.y+self.z/4-self.th-self.tl,
@@ -66,13 +90,26 @@ function player:aabbInit()
 		self.tw,self.tl)
 	self.aabbFoot.parent=self
 	self.aabbFoot.part="foot"
+
+	self.handLeft = self.skeleton:findSlot("62")
+	local x,y=getSlotPos(self.handLeft,self.skeleton)
+	self.aabbPunchLeft=stage.world:rectangle(x,y,30,30)
+	self.aabbPunchLeft.parent=self
+	self.aabbPunchLeft.part="pleft"
+	self.aabbPunchLeft.enabled = false
+
+	self.handRight = self.skeleton:findSlot("6")
+	local x,y=getSlotPos(self.handRight,self.skeleton)
+	self.aabbPunchRight=stage.world:rectangle(x,y,30,30)
+	self.aabbPunchRight.parent=self
+	self.aabbPunchRight.part="pright"
+	self.aabbPunchLeft.enabled = false
 end
 
 
 
-function player:collTest()
+function npc:collTest()
 	
-
 	for shape, delta in pairs(self.stage.world:collisions(self.aabbBody)) do
        	if shape.part=="body" and math.abs(shape.parent.z-self.z)<math.abs(self.tl+shape.parent.tl) then
    			self:moveTo(self.x-self.dx,self.y,self.z-self.dz)
@@ -80,7 +117,35 @@ function player:collTest()
     end
 end
 
-function player:applyG()
+function npc:hitTest()
+	if not self.isAttacking then return end
+
+	if self.aabbPunchLeft.enabled then
+		for shape, delta in pairs(self.stage.world:collisions(self.aabbPunchLeft)) do
+	       	if shape.parent~=self and shape.part=="body" and 
+	       		math.abs(shape.parent.z-self.z)<math.abs(self.tl+shape.parent.tl) then
+	  			shape.parent:gotHit(self,false) --isheavy
+	       	end
+	    end
+	end
+
+	if self.aabbPunchRight.enabled then
+		for shape, delta in pairs(self.stage.world:collisions(self.aabbPunchRight)) do
+	       	if shape.parent~=self and shape.part=="body" and 
+	       		math.abs(shape.parent.z-self.z)<math.abs(self.tl+shape.parent.tl) then
+	  			shape.parent:gotHit(self,true) --isheavy
+	       	end
+	    end
+	end
+
+end
+
+function npc:gotHit(attacker,isHeavy)
+	self.state:switch(nil,states.attacked_back_light,true)
+end
+
+
+function npc:applyG()
 	local test=false
 	for shape, delta in pairs(self.stage.world:collisions(self.aabbFoot)) do
        	
@@ -116,25 +181,27 @@ function player:applyG()
 end
 
 
-function player:applyToColl()
+function npc:applyToColl()
 	self.aabbBody:moveTo(self.x+self.tw/2,self.y+self.z/4-self.th/2-self.tl/2)
 	self.aabbHead:moveTo(self.x+self.tw/2,self.y+self.z/4-self.th-self.tl/2)
 	self.aabbFoot:moveTo(self.x+self.tw/2,self.y+self.z/4-self.tl/2)
+	
 end
 
 
 
-function player:unpdateSkeletonPos(dt)
+function npc:unpdateSkeletonPos(dt)
 	self.skeleton.flipX = not self.facingRight
 	self.skeleton.x=self.x+self.tw/2
 	self.skeleton.y=self.y+self.z/4
 	self.skeletonState:update(dt)
 	self.skeletonState:apply(self.skeleton)
 	self.skeleton:updateWorldTransform()
-
+	self.aabbPunchLeft:moveTo(getSlotPos(self.handLeft,self.skeleton))
+	self.aabbPunchRight:moveTo(getSlotPos(self.handRight,self.skeleton))
 end
 
-function player:translate()
+function npc:translate()
 	local multiply = self.isRunning and 2 or 1
 	
 	self.dx = self.dx + self.dax*multiply
@@ -147,9 +214,7 @@ function player:translate()
 
 	if math.abs(self.dx)<0.1 then self.dx=0 end
 	if math.abs(self.dz)<0.1 then self.dz=0 end
-
-	
-	
+		
 
 	if self.z+self.dz<=0 then 
 		self.dz=0
@@ -176,7 +241,7 @@ function player:translate()
 	self:applyToColl()
 end
 
-function player:attackCombo(dt)
+function npc:attackCombo(dt)
 	if self.isAttacking then
 		self.comboTimer = self.comboCD
 	else
@@ -187,11 +252,12 @@ function player:attackCombo(dt)
 	end
 end
 
-function player:update(dt)
-	self:keydown(dt)
+function npc:update(dt)
+
+	
 	self:attackCombo(dt)
 		
-	
+	self:hitTest()
 	self:collTest()
 	self:translate()
 	
@@ -201,7 +267,7 @@ end
 
 
 
-function player:moveTo(x,y,z)
+function npc:moveTo(x,y,z)
 	self.x=x
 	self.y=y
 	self.z=z
@@ -210,7 +276,7 @@ end
 
 
 
-function player:jump()
+function npc:jump()
 	if not self.onGround then return end
 	if self.isAttacking then return end
 	if self.isRunning then
@@ -225,7 +291,7 @@ end
 
 
 
-function player:attack()	
+function npc:attack()	
 	if self.isAttacking then			
 		self.nextAttack = true
 	else
@@ -234,60 +300,14 @@ function player:attack()
 	
 end
 
-function player:roate(dr)
+function npc:roate(dr)
 	self.r=self.r+dr
 	self.aabbB:setRotation(self.r)
 end
 
-function player:moveByStick(sx,sy)
-	if sx==sy and sy==0 then return end
-	if math.abs(sx)>0.5 or math.abs(sy)>0.5 then self.isRunning=true end
-	
-	
-	self.dax = self.speed * math.sign(sx)
-	self.daz = -self.speed * math.sign(sy)
-	
-end
 
 
-
-
-function player:keydown(dt)
-	
-	
-	if not self.isAttacking then
-
-		if love.keyboard.isDown("a") then
-			self.dax = -self.speed 
-		end
-		if love.keyboard.isDown("d") then
-			self.dax = self.speed 
-		end
-		if  love.keyboard.isDown("w") then
-			self.daz =  -self.speed
-		end
-		if  love.keyboard.isDown("s") then
-			self.daz =  self.speed
-		end
-
-		if  love.keyboard.isDown("lshift") then
-			self.isRunning = true
-		else
-			self.isRunning = false
-		end
-
-	end
-
-end
-
-
-
-function player:keypress(key)
-	if key=="space" then self:jump() end
-	if key=="f" then self:attack() end
-end
-
-function player:draw()
+function npc:draw()
 	
 	self.class.super.draw(self)
 	if self.debug then
@@ -295,9 +315,11 @@ function player:draw()
 		self.aabbBody:draw()
 		self.aabbFoot:draw()
 		self.aabbHead:draw()
+		self.aabbPunchRight:draw()
+		self.aabbPunchLeft:draw()
 	end
 	self.skeleton:draw()
 
 end
 
-return player
+return npc
