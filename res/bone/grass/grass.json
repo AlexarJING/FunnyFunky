@@ -1,0 +1,45 @@
+{
+"skeleton": { "hash": "zhRfgCFReitPN1pTAxCrX6nCWps", "spine": "3.2.01", "width": 166, "height": 99, "images": "./images/" },
+"bones": [
+	{ "name": "root" },
+	{ "name": "bone", "parent": "root" }
+],
+"slots": [
+	{ "name": "c7", "bone": "bone", "attachment": "c7" }
+],
+"skins": {
+	"default": {
+		"c7": {
+			"c7": {
+				"type": "mesh",
+				"uvs": [ 0.99998, 0.46568, 1, 1, 0, 1, 0.00149, 0.46497, 0, 0, 1, 0 ],
+				"triangles": [ 3, 4, 5, 0, 3, 5, 3, 0, 1, 2, 3, 1 ],
+				"vertices": [ 82.99, 52.3, 83, -0.58999, -82.99, -0.58999, -82.75, 52.37, -82.99, 98.4, 83, 98.4 ],
+				"hull": 6,
+				"edges": [ 2, 4, 8, 10, 4, 6, 6, 8, 2, 0, 0, 10, 6, 0 ],
+				"width": 166,
+				"height": 99
+			}
+		}
+	}
+},
+"animations": {
+	"animation": {
+		"ffd": {
+			"default": {
+				"c7": {
+					"c7": [
+						{ "time": 0 },
+						{
+							"time": 0.1,
+							"offset": 9,
+							"vertices": [ -1.968, 0, -1.968 ]
+						},
+						{ "time": 0.2666 }
+					]
+				}
+			}
+		}
+	}
+}
+}

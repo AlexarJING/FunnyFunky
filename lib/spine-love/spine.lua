@@ -347,16 +347,17 @@ local loader= require "lib/spineAtlasLoader"
 
 
 
-function spine.newActor(name,x,y,rot,scale)
+function spine.newActor(name,subname,x,y,rot,scale)
+
 	local json = spine.SkeletonJson.new()
 	json.scale = scale
 
 	local data,batch
-	if love.filesystem.exists("res/bone/"..name.."/"..name..".atlas") then
+	if love.filesystem.exists("res/bone/"..name.."/"..subname..".atlas") then
 		data,batch=loader.load(name)
 	end
 	
-	local skeletonData = json:readSkeletonDataFile("res/bone/"..name.."/"..name..".json")
+	local skeletonData = json:readSkeletonDataFile("res/bone/"..name.."/"..subname..".json")
 
 	local skeleton = spine.Skeleton.new(name,skeletonData,batch)
 

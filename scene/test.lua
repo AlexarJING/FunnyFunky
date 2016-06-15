@@ -1,10 +1,9 @@
 local scene = gamestate.new()
 local Stage = require "cls/stage"
-local bg = require "cls/background"
-local static = require "cls/static"
+local static = require "cls/spineActor"
 local player = require "cls/player"
-local npc = require "cls/npc"
-local joystick = require "cls/joystick"
+local npc = require "cls/role"
+local joystick = require "cls/joystick"()
 local Button = require "cls/button"
 local buttonA = Button(1100,500,100,80,"jump")
 local buttonB = Button(1000,600,100,80,"action")
@@ -15,15 +14,11 @@ function scene:init()
 	self.stage = Stage("test")
 	local stage= self.stage
 	local bg =  bg(stage,0,300,"rexue")
-	--local cat2 = static(stage, 300,0,0,"cat")
-	--cat2 = static(stage, 100,0,300,"cat")
-	hero = player(stage, 600,0,0,"mega")
+	hero = player(stage, 600,0,0,"role","mega")
 	self.stage:setCameraFocus(hero)
 	
-	local n1 = npc(stage, 200,0,200,"mega")
+	local n1 = npc(stage, 200,0,200,"role","mega")
 
-
-	joystick:new()
 	buttonA.onClick=function(b)
 		hero:jump()
 	end
@@ -54,12 +49,11 @@ function scene:draw()
 end
 
 function scene:update(dt)
-	self.stage:update(dt)
 	joystick:update()
 	hero:moveByStick(joystick.vx,joystick.vy)
 	buttonA:update()
 	buttonB:update()
-	
+	self.stage:update(dt)
 end 
 
 

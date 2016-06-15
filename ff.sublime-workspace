@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"for",
+				"forp	for k,v in pairs()"
+			],
+			[
 				"aabbPunc",
 				"aabbPunchLeft"
 			],
@@ -42,10 +46,6 @@
 			[
 				"isdonw",
 				"love.mouse.isDown"
-			],
-			[
-				"for",
-				"fori	for i,v in ipairs()"
 			],
 			[
 				"vertIndex",
@@ -523,52 +523,64 @@
 			"file": "cls/player.lua",
 			"settings":
 			{
-				"buffer_size": 8016,
+				"buffer_size": 1278,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "cls/npc.lua",
+			"contents": "local base = require \"cls/base\"\nlocal imageActor=class(\"imageActor\",base)\n\nfunction imageActor:init(stage,x,y,z,texture)\n	base.init(self,stage,x,y,z)\n	self.name=texture\n	local t,r =pcall(love.graphics.newImage,\"res/img/\"..texture..\".png\")\n	self.texture = t and r\n	self.tw = self.texture and self.texture:getWidth()\n	self.th = self.texture and self.texture:getHeight()\n	self.stage= stage\n	stage:addActor(self)\nend\n\nfunction imageActor:update()\n\nend\n\nfunction imageActor:destroy()\n	self.stage:killActor(self)\nend\n\nfunction imageActor:draw()\n\n	if self.color then\n		love.graphics.setColor(self.color)\n	else\n		love.graphics.setColor(255, 255, 255, 255)\n	end\n	if self.texture then\n		love.graphics.draw(self.texture, self.x+self.tw/2, self.y+self.z/4-self.th/2, self.r,\n	 	self.sx, self.sy,self.tw/2,self.th/2)\n	end\nend\n\n\nreturn imageActor",
+			"file": "cls/imageActor.lua",
+			"file_size": 909,
+			"file_write_time": 131104496537706178,
 			"settings":
 			{
-				"buffer_size": 7184,
+				"buffer_size": 832,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "lib/roleState.lua",
+			"file": "cls/role.lua",
 			"settings":
 			{
-				"buffer_size": 1041,
-				"line_ending": "Unix"
+				"buffer_size": 7890,
+				"line_ending": "Windows",
+				"name": "role.lua"
 			}
 		},
 		{
+			"contents": "local scene = gamestate.new()\nlocal Stage = require \"cls/stage\"\nlocal static = require \"cls/spineActor\"\nlocal player = require \"cls/player\"\nlocal npc = require \"cls/role\"\nlocal joystick = require \"cls/joystick\"()\nlocal Button = require \"cls/button\"\nlocal buttonA = Button(1100,500,100,80,\"jump\")\nlocal buttonB = Button(1000,600,100,80,\"action\")\n\nlocal debugfont  = love.graphics.newFont(12)\n\nfunction scene:init()\n	self.stage = Stage(\"test\")\n	local stage= self.stage\n	\n	local bg = static(stage,123)\n\n	hero = player(stage, 600,0,0,\"role\",\"mega\")\n	self.stage:setCameraFocus(hero)\n	\n	local n1 = npc(stage, 200,0,200,\"role\",\"mega\")\n\n	buttonA.onClick=function(b)\n		hero:jump()\n	end\n	buttonB.onClick=function(b)\n		hero:attack()\n	end\nend \n\nfunction scene:enter()\n	\nend\n\nfunction scene:leave()\n	\nend\n\n\nfunction scene:draw()\n	self.stage:draw()\n	joystick:draw()\n	buttonA:draw()\n	buttonB:draw()\n	love.graphics.setColor(255, 0, 0, 255)\n	love.graphics.setFont(debugfont)\n	love.graphics.print(\"Mega State: \"..hero.state.current.name, 100,100)\n	love.graphics.print(\"isAttacking: \"..tostring(hero.isAttacking), 100,130)\n	love.graphics.print(\"attack level: \"..tostring(hero.attackLevel), 100,160)\nend\n\nfunction scene:update(dt)\n	joystick:update()\n	hero:moveByStick(joystick.vx,joystick.vy)\n	buttonA:update()\n	buttonB:update()\n	self.stage:update(dt)\nend \n\n\n\nfunction scene:keyDown()\n\nend\n\n\nfunction scene:keypressed(key)\n	hero:keypress(key)\nend\n\n\nreturn scene",
 			"file": "scene/test.lua",
+			"file_size": 1515,
+			"file_write_time": 131104490647475643,
 			"settings":
 			{
-				"buffer_size": 1565,
+				"buffer_size": 1441,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "cls/megaState.lua",
+			"contents": "local base=class(\"base\")\n\nfunction base:init(stage,x,y,z)\n	self.x=x\n	self.y=y\n	self.z= z\n	self.r= 0\n	self.sx=1\n	self.sy =1	\n	self.stage= stage\n	stage:addActor(self)\nend\n\nfunction base:update()\nend\n\nfunction base:destroy()\n	self.stage:killActor(self)\nend\n\nfunction base:draw()\nend\n\n\nreturn base",
+			"file": "cls/base.lua",
+			"file_size": 325,
+			"file_write_time": 131104495279300446,
 			"settings":
 			{
-				"buffer_size": 3571,
-				"line_ending": "Windows"
+				"buffer_size": 293,
+				"line_ending": "Windows",
+				"name": "base.lua"
 			}
 		},
 		{
-			"file": "main.lua",
+			"file": "cls/spineActor.lua",
 			"settings":
 			{
-				"buffer_size": 571,
-				"line_ending": "Windows"
+				"buffer_size": 3144,
+				"line_ending": "Windows",
+				"name": "spineActor.lua"
 			}
 		}
 	],
-	"build_system": "",
+	"build_system": "Packages/Lua Love/LuaLove.sublime-build",
 	"build_system_choices":
 	[
 		[
@@ -597,6 +609,38 @@
 			[
 				"Packages/Lua Love/LuaLove.sublime-build",
 				"Love2D"
+			]
+		],
+		[
+			[
+				[
+					"Packages/Lua Love/LuaLove.sublime-build",
+					""
+				],
+				[
+					"Packages/Lua Love/LuaLove.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/Lua Love/LuaLove.sublime-build",
+					"Love2D_0.10"
+				],
+				[
+					"Packages/Lua Love/LuaLove.sublime-build",
+					"Love2D_0.92"
+				],
+				[
+					"Packages/Lua Love/LuaLove.sublime-build",
+					"ldoc: File"
+				],
+				[
+					"Packages/Lua Love/LuaLove.sublime-build",
+					"ldoc: Project"
+				]
+			],
+			[
+				"Packages/Lua Love/LuaLove.sublime-build",
+				"Love2D_0.10"
 			]
 		]
 	],
@@ -666,27 +710,38 @@
 	[
 		"/F/Love2D Project/FunnyFunky",
 		"/F/Love2D Project/FunnyFunky/cls",
-		"/F/Love2D Project/FunnyFunky/lib",
 		"/F/Love2D Project/FunnyFunky/scene"
 	],
 	"file_history":
 	[
+		"/F/Love2D Project/FunnyFunky/cls/property.lua",
+		"/F/Love2D Project/FunnyFunky/cls/joystick.lua",
+		"/F/Love2D Project/FunnyFunky/lib/standardRoleState.lua",
+		"/F/Love2D Project/FunnyFunky/cls/imageActor.lua",
+		"/F/Love2D Project/FunnyFunky/scene/test.lua",
+		"/F/Love2D Project/FunnyFunky/lib/spine-love/spine.lua",
+		"/F/Love2D Project/FunnyFunky/cls/roleState.lua",
+		"/F/Love2D Project/FunnyFunky/cls/static.lua",
+		"/C/Users/Alexar/Desktop/攻击逻辑.txt",
+		"/F/Love2D Project/FunnyFunky/cls/npc.lua",
+		"/F/Love2D Project/FunnyFunky/lib/spine-lua/AnimationState.lua",
+		"/F/Love2D Project/FunnyFunky/main.lua",
+		"/F/Love2D Project/FunnyFunky/cls/megaState.lua",
+		"/F/Love2D Project/FunnyFunky/lib/roleState.lua",
+		"/F/Love2D Project/FunnyFunky/cls/actionState.lua",
+		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/Alexar/Desktop/defold/branches/26730/17281/main/main/object/mega/mega.script",
 		"/C/Users/Alexar/Desktop/LoveMore/src/lovemore/component/SpineAnimator/SpineAnimator.h",
 		"/C/Users/Alexar/Desktop/LoveMore/extra/resources/b64.lua",
 		"/F/Love2D Project/FunnyFunky/cls/player.lua",
-		"/F/Love2D Project/FunnyFunky/scene/test.lua",
 		"/C/Users/Alexar/Desktop/defold/artifacts.xml",
 		"/F/Love2D Project/FunnyFunky/res/bone/mega/skeleton.json",
 		"/C/Users/Alexar/Desktop/热血/skeleton.json",
 		"/C/Users/Alexar/Desktop/热血/skeleton.atlas",
 		"/C/Users/Alexar/Desktop/defold/branches/26357/17281/local/main/bone/mega2/skeleton.json",
 		"/F/Love2D Project/FunnyFunky/cls/button.lua",
-		"/F/Love2D Project/FunnyFunky/lib/spine-love/spine.lua",
-		"/F/Love2D Project/FunnyFunky/cls/actionState.lua",
 		"/C/Users/Alexar/Desktop/热血/热血/skeleton.json",
 		"/F/Love2D Project/FunnyFunky/res/bone/mega/mega2.json",
-		"/F/Love2D Project/FunnyFunky/cls/joystick.lua",
-		"/F/Love2D Project/FunnyFunky/main.lua",
 		"/F/Love2D Project/FunnyFunky/lib/spine-lua/SkeletonBounds.lua",
 		"/F/Love2D Project/FunnyFunky/lib/spine-lua/Animation.lua",
 		"/C/Users/Alexar/Desktop/spine-runtimes-master/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonJson.java",
@@ -703,7 +758,6 @@
 		"/F/Love2D Project/FunnyFunky/lib/spine-lua/AttachmentType.lua",
 		"/C/Users/Alexar/Desktop/spine-update/spine-lua/Animation.lua",
 		"/F/Love2D Project/FunnyFunky/cls/background.lua",
-		"/F/Love2D Project/FunnyFunky/cls/static.lua",
 		"/F/Love2D Project/FunnyFunky/lib/spine-lua/AttachmentLoader.lua",
 		"/C/Users/Alexar/Desktop/spine-update/spine-love/spine.lua",
 		"/F/Love2D Project/FunnyFunky/lib/spine-lua/BlendMode.lua",
@@ -722,7 +776,6 @@
 		"/F/Love2D Project/FunnyFunky/res/bone/mega/mega.json",
 		"/F/Love2D Project/FunnyFunky/lib/spineAtlasLoader.lua",
 		"/F/Love2D Project/FunnyFunky/res/bone/girl/girl.json",
-		"/F/Love2D Project/FunnyFunky/lib/spine-lua/AnimationState.lua",
 		"/C/Users/Alexar/Desktop/test/skeleton.atlas",
 		"/C/Users/Alexar/Desktop/AtlasImporter.lua",
 		"/F/Love2D Project/FunnyFunky/spineAtlasLoader.lua",
@@ -730,7 +783,6 @@
 		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/Default/Default (Windows).sublime-keymap",
 		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/User/Pretty JSON.sublime-settings",
 		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/Pretty JSON/Pretty JSON.sublime-settings",
-		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Program Files (x86)/Sublime Text 3/Data/Packages/User/Preferences.sublime-settings",
 		"/C/Users/Alexar/Desktop/spine-love/main.lua",
 		"/F/Love2D Project/FunnyFunky/scene/inter.lua",
@@ -789,16 +841,7 @@
 		"/F/Love2D Project/box2d/ui/editMenu.lua",
 		"/C/Users/Alexar/AppData/Roaming/LOVE/box2d/abc/units/test.lua",
 		"/F/Love2D Project/box2d/editor/box2dhelper/collision.lua",
-		"/F/Love2D Project/box2d/editor/box2dhelper/editor/box2dhelper/reaction.lua",
-		"/F/Love2D Project/box2d/editor/materials.lua",
-		"/F/Love2D Project/box2d/ui/ui/property.lua",
-		"/F/Love2D Project/box2d/libs/loveframes/objects/grid.lua",
-		"/F/Love2D Project/tetris/main.lua",
-		"/F/Love2D Project/box2d/ui/fileMenu.lua",
-		"/F/Love2D Project/box2d/ui/help.lua",
-		"/F/Love2D Project/box2d/libs/loveframes/objects/text.lua",
-		"/F/Love2D Project/box2d/libs/loveframes/init.lua",
-		"/F/Love2D Project/box2d/ui/world.lua"
+		"/F/Love2D Project/box2d/editor/box2dhelper/editor/box2dhelper/reaction.lua"
 	],
 	"find":
 	{
@@ -817,6 +860,26 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"imageActor",
+			"hen",
+			"tw",
+			"tl",
+			"th",
+			"role",
+			"imageActor",
+			"object",
+			"static",
+			"player",
+			"move",
+			"day",
+			"lastDownTime",
+			"skeletonstate",
+			"event",
+			"Events",
+			"firedEvents",
+			"event",
+			"on",
+			"lasttime",
 			"print",
 			"player",
 			"bound",
@@ -924,27 +987,7 @@
 			"b:SetSize(80,10)",
 			"b:SetSize(50,10)",
 			"cate",
-			"print",
-			"end",
-			"creator",
-			"vertex",
-			"require",
-			"about",
-			" --",
-			"utf8unicode",
-			"print",
-			"self.propTagIndex",
-			"toggle",
-			"tag",
-			"self.action",
-			"preview",
-			"print",
-			"setpos",
-			"focus",
-			"hover",
-			"button",
-			"rest",
-			"mousetest"
+			"print"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -952,6 +995,16 @@
 		"regex": false,
 		"replace_history":
 		[
+			"base",
+			"then",
+			"w",
+			"l",
+			"h",
+			"spineActor",
+			"imageActor",
+			"property",
+			"role",
+			"animState",
 			"npc",
 			"(path..\"",
 			"path..\"",
@@ -1069,17 +1122,7 @@
 			"right",
 			"left2",
 			"p",
-			"right",
-			"*4",
-			"*8",
-			"self.",
-			"keyboard.",
-			"self.",
-			"frame",
-			"slots",
-			"isHover",
-			"down",
-			"60"
+			"right"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1090,7 +1133,7 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -1099,15 +1142,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8016,
+						"buffer_size": 1278,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3416,
-								3430
+								169,
+								169
 							]
 						],
 						"settings":
@@ -1117,87 +1160,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2280.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "cls/npc.lua",
+					"file": "cls/imageActor.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7184,
+						"buffer_size": 832,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2658,
-								2661
-							]
-						],
-						"settings":
-						{
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1727.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "lib/roleState.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1041,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								891,
-								891
-							]
-						],
-						"settings":
-						{
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 540.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "scene/test.lua",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1565,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1166,
-								1171
+								148,
+								148
 							]
 						],
 						"settings":
@@ -1207,27 +1190,58 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": -0.0,
-						"translation.y": 647.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "cls/megaState.lua",
+					"buffer": 2,
+					"file": "cls/role.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3571,
+						"buffer_size": 7890,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3135,
-								3135
+								205,
+								205
+							]
+						],
+						"settings":
+						{
+							"auto_name": "role.lua",
+							"origin_encoding": "UTF-8",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 60.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "scene/test.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1441,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								497,
+								497
 							]
 						],
 						"settings":
@@ -1237,31 +1251,61 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2420.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "main.lua",
+					"buffer": 4,
+					"file": "cls/base.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 571,
+						"buffer_size": 293,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								40,
-								40
+								56,
+								56
 							]
 						],
 						"settings":
 						{
+							"auto_name": "base.lua",
+							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "cls/spineActor.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3144,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								27,
+								27
+							]
+						],
+						"settings":
+						{
+							"auto_name": "spineActor.lua",
 							"origin_encoding": "UTF-8",
 							"syntax": "Packages/Lua Love/LuaLove.tmLanguage"
 						},
@@ -1269,7 +1313,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -1308,7 +1352,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 175.0
+		"height": 130.0
 	},
 	"output.find_results":
 	{
@@ -1356,7 +1400,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 282.0,
+	"side_bar_width": 225.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

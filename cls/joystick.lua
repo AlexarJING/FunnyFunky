@@ -1,6 +1,6 @@
-local joystick={}
+local joystick=class("joystick")
 
-function joystick:new()
+function joystick:init()
 	self.working=false
 	self.limit=50
 	self.stickSize=30
