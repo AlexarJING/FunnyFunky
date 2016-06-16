@@ -205,7 +205,8 @@ function spine.Skeleton.new (name,skeletonData, group)
 
 		for i,slot in ipairs(self.drawOrder) do
 			
-			local attachment = slot.attachment
+			local attachment = slot.attachment or {}
+			
 			if attachment.type==spine.AttachmentType.region then
 				local image = images[slot]
 				if image and image ~= spine.Skeleton.failed then
@@ -224,9 +225,10 @@ function spine.Skeleton.new (name,skeletonData, group)
 						rotation = -rotation
 					end
 					love.graphics.setColor(r * slot.r, g * slot.g, b * slot.b, a * slot.a)
+					--slot.data.blendMode="alpha"
+					love.graphics.setBlendMode(slot.data.blendMode)
 					
-					love.graphics.setBlendMode(spine.BlendMode[slot.data.blendMode] or "alpha")
-					
+
 					love.graphics.draw(image, 
 						self.x + x, 
 						self.y - y, 
@@ -237,6 +239,8 @@ function spine.Skeleton.new (name,skeletonData, group)
 						attachment.originY,
 						attachment.shearX,
 						attachment.shearY)
+
+
 				end
 			elseif attachment.type== spine.AttachmentType.mesh 
 				or attachment.type == spine.AttachmentType.weightedmesh then
@@ -259,7 +263,8 @@ function spine.Skeleton.new (name,skeletonData, group)
 				
 					love.graphics.setColor(r * slot.r, g * slot.g, b * slot.b, a * slot.a)
 					
-					love.graphics.setBlendMode(spine.BlendMode[slot.data.blendMode] or "alpha")
+
+					love.graphics.setBlendMode(slot.data.blendMode)
 					
 					love.graphics.draw(meshData.mesh, 
 						self.x + x, 
@@ -338,7 +343,7 @@ function spine.Skeleton.new (name,skeletonData, group)
 			end
 		end
 	end
-
+	love.graphics.setBlendMode("alpha")
 	return self
 end
 

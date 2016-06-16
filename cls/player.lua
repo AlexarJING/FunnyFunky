@@ -1,8 +1,8 @@
 local role = require "cls/role"
 local player= class("player",role)
 
-function player:init(stage,x,y,z,texture,subname)
-	player.super.init(self,stage,x,y,z,texture,subname)
+function player:init(stage,x,y,z,name,subname)
+	player.super.init(self,stage,x,y,z,name,subname)
 end
 
 function player:keydown()

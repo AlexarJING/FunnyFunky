@@ -156,7 +156,8 @@ function SkeletonJson.new (attachmentLoader)
 				end
 
 				slotData.attachmentName = slotMap["attachment"]
-				slotData.blendMode = BlendMode[slotMap["blend"] or "normal"]
+				
+				slotData.blendMode = slotMap["blend"] or "alpha"
 
 				table.insert(skeletonData.slots, slotData)
 				skeletonData.slotNameIndices[slotData.name] = #skeletonData.slots

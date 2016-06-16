@@ -1,5 +1,5 @@
 local Debug = true --调试模式
-
+local spineActorSize=1
 
 ----------------------------------------------libs----------------------------
 local spineActor= class("spineActor")
@@ -7,9 +7,10 @@ local spineActor= class("spineActor")
 -------------------------------------------func----------------------------
 
 
-function spineActor:init(stage,x,y,z,w,h,l,name,subname)
+function spineActor:init(stage,x,y,z,name,subname)
+	self:initProperties(x,y,z,stage)
 	self:initAnim(name,subname,x,y,z)
-	self:initProperties(w,h,l)
+	
 	self:initAABB()
 end
 
@@ -19,10 +20,18 @@ function spineActor:initAnim(texture,subname,x,y,z)
 	self.animState=state
 end
 
-function spineActor:initProperties(w,h,l)
-	self.w=w
-	self.h=h
-	self.l=l
+function spineActor:initProperties(x,y,z,stage)
+	self.x=x
+	self.y=y
+	self.z= z
+	self.r= 0
+	self.sx=1
+	self.sy =1	
+	self.stage= stage
+	stage:addActor(self)
+	self.w=200
+	self.h=300
+	self.l=20
 
 	self.debug=Debug
 end
@@ -60,55 +69,9 @@ function spineActor:playAnim(name,loop,add,delay,speed)
 end
 
 
-function spineActor:collTest()
-	
-	for shape, delta in pairs(self.stage.world:collisions(self.aabbBody)) do
-       	if shape.part=="body" and mah.abs(shape.parent.z-self.z)<mah.abs(self.l+shape.parent.l) then
-   			self:moveTo(self.x-self.dx,self.y,self.z-self.dz)
-       	end
-    end
-end
-
-
 
 function spineActor:gohit(attacker,isHeavy)
 	print("ok")
-end
-
-
-function spineActor:applyG()
-	local test=false
-	for shape, delta in pairs(self.stage.world:collisions(self.aabbFoot)) do
-       	
-       	if shape.part=="foot" and mah.abs(shape.parent.z-self.z)<mah.abs(self.l+shape.parent.l)*3  then
-   			self:moveTo(self.x+delta.x ,self.y,self.z+delta.y)
-   		end
-
-       	if shape.part=="head" and self.dy>=0 and mah.abs(shape.parent.z-self.z)<mah.abs(self.l+shape.parent.l)*3  then
-       		if not self.onGround then
-       			self:moveTo(self.x ,shape.parent.y-shape.parent.h,self.z)
-       		end
-   			test=true
-       	end
-
-    end
-
- 
-    if test then
-    	self.onGround = true
-    	self.dy = 0
-    else
-    	self.dy = self.dy + 0.5
-    	if self.y + self.dy >= 0 then
-    		self.y=0
-    		self.dy=0
-    		self.onGround=true
-    	else
-    		self.y=self.y+self.dy
-    		self.onGround = false
-    	end
-    end
-
 end
 
 
@@ -125,8 +88,6 @@ end
 
 
 function spineActor:update(dt)
-	
-	self:collTest()
 		
 	self:updateSkeleton(dt)
 	
@@ -141,8 +102,9 @@ function spineActor:draw()
 		self.aabbFoot:draw()
 		self.aabbHead:draw()
 	end
+		
 	self.skeleton:draw()
-
+	
 end
 
 return spineActor

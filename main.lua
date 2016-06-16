@@ -10,7 +10,8 @@ input= require "lib/input"
 stage= require "cls/stage"
 Camera= require "lib/gamera"
 
-function love.load() 
+function love.load()
+	love.graphics.setBackgroundColor(100, 100, 100, 255)
     gameState={}
     for _,name in ipairs(love.filesystem.getDirectoryItems("scene")) do
         gameState[name:sub(1,-5)]=require("scene."..name:sub(1,-5))

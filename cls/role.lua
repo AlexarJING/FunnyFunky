@@ -28,25 +28,35 @@ local states = require "lib/standardRoleState"
 -------------------------------------------func----------------------------
 
 
-function role:init(stage,x,y,z,texture,subname)
-	role.super.init(self,stage,x,y,z,texture)
-	self:initAnim(texture,subname,x,y,z)
-	self:initProperties()
+function role:init(stage,x,y,z,name,subname)
+
+	self:initAnim(name,subname,x,y,z)
+	self:initProperties(x,y,z,stage)
 	self:initState()
 	self:initAABB()
 end
 
-function role:initAnim(texture,subname,x,y,z)
-	local skeleton,skeletonData,state,stateData = spine.newActor(texture,subname,x,y,z,RoleSize)
+function role:initAnim(name,subname,x,y,z)
+	local skeleton,skeletonData,state,stateData = spine.newActor(name,subname,x,y,z,RoleSize)
 	self.skeleton=skeleton
 	self.animState=state
 	self.animState:setAnimationByName (0, "idle1", true)
 end
 
-function role:initProperties()
-	self.tw=RoleWidth
-	self.th=RoleHeight
-	self.tl=RoleLenth
+function role:initProperties(x,y,z,stage)
+	self.x=x
+	self.y=y
+	self.z= z
+	self.r= 0
+	self.sx=1
+	self.sy =1	
+	self.stage= stage
+	stage:addActor(self)
+
+
+	self.w=RoleWidth
+	self.h=RoleHeight
+	self.l=RoleLenth
 
 	self.debug=Debug
 	self.comboCD = AttackComboCD
@@ -82,30 +92,30 @@ end
 function role:initAABB()
 	local stage = self.stage
 	self.aabbBody=stage.world:rectangle(
-		self.x,self.y+self.z/4-self.th-self.tl,
-		self.tw,self.th-self.tl)
+		self.x,self.y+self.z/4-self.h-self.l,
+		self.w,self.h-self.l)
 	self.aabbBody.parent=self
 	self.aabbBody.part="body"
 	self.aabbHead=stage.world:rectangle(
-		self.x,self.y+self.z/4-self.th-self.tl,
-		self.tw,self.tl)
+		self.x,self.y+self.z/4-self.h-self.l,
+		self.w,self.l)
 	self.aabbHead.parent=self
 	self.aabbHead.part="head"
 
 	self.aabbFoot=stage.world:rectangle(
-		self.x,self.y+self.z/4-self.tl,
-		self.tw,self.tl)
+		self.x,self.y+self.z/4-self.l,
+		self.w,self.l)
 	self.aabbFoot.parent=self
 	self.aabbFoot.part="foot"
 
 	self.aabbLeft=stage.world:rectangle(
-		self.x-self.tw/2-AttackZoneWidth/2,self.y-self.th,AttackZoneWidth,self.th)
+		self.x-self.w/2-AttackZoneWidth/2,self.y-self.h,AttackZoneWidth,self.h)
 	self.aabbLeft.parent=self
 	self.aabbLeft.part="left"
 	self.aabbLeft.enabled = false
 
 	self.aabbRight=stage.world:rectangle(
-		self.x+self.tw/2+AttackZoneWidth/2,self.y-self.th,AttackZoneWidth,self.th)
+		self.x+self.w/2+AttackZoneWidth/2,self.y-self.h,AttackZoneWidth,self.h)
 	self.aabbRight.parent=self
 	self.aabbRight.part="right"
 	self.aabbRight.enabled = false
@@ -126,7 +136,7 @@ end
 function role:collTest()
 	
 	for shape, delta in pairs(self.stage.world:collisions(self.aabbBody)) do
-       	if shape.part=="body" and math.abs(shape.parent.z-self.z)<math.abs(self.tl+shape.parent.tl) then
+       	if shape.part=="body" and math.abs(shape.parent.z-self.z)<math.abs(self.l+shape.parent.l) then
    			self:moveTo(self.x-self.dx,self.y,self.z-self.dz)
        	end
     end
@@ -138,7 +148,7 @@ function role:hitTest()
 	if self.aabbLeft.enabled then
 		for shape, delta in pairs(self.stage.world:collisions(self.aabbLeft)) do
 	       	if shape.parent~=self and shape.part=="body" and 
-	       		math.abs(shape.parent.z-self.z)<math.abs(self.tl+shape.parent.tl) then
+	       		math.abs(shape.parent.z-self.z)<math.abs(self.l+shape.parent.l) then
 	  			shape.parent:gotHit(self,false) 
 	       	end
 	    end
@@ -147,7 +157,7 @@ function role:hitTest()
 	if self.aabbRight.enabled then
 		for shape, delta in pairs(self.stage.world:collisions(self.aabbRight)) do
 	       	if shape.parent~=self and shape.part=="body" and 
-	       		math.abs(shape.parent.z-self.z)<math.abs(self.tl+shape.parent.tl) then
+	       		math.abs(shape.parent.z-self.z)<math.abs(self.l+shape.parent.l) then
 	  			shape.parent:gotHit(self,true) --isheavy
 	       	end
 	    end
@@ -164,11 +174,11 @@ function role:applyG()
 	local test=false
 	for shape, delta in pairs(self.stage.world:collisions(self.aabbFoot)) do
        	
-       	if shape.part=="foot" and math.abs(shape.parent.z-self.z)<math.abs(self.tl+shape.parent.tl)*3  then
+       	if shape.part=="foot" and math.abs(shape.parent.z-self.z)<math.abs(self.l+shape.parent.l)*3  then
    			self:moveTo(self.x+delta.x ,self.y,self.z+delta.y)
    		end
 
-       	if shape.part=="head" and self.dy>=0 and math.abs(shape.parent.z-self.z)<math.abs(self.tl+shape.parent.tl)*3  then
+       	if shape.part=="head" and self.dy>=0 and math.abs(shape.parent.z-self.z)<math.abs(self.l+shape.parent.l)*3  then
        		if not self.onGround then
        			self:moveTo(self.x ,shape.parent.y-shape.parent.th,self.z)
        		end
@@ -197,16 +207,16 @@ end
 
 
 function role:applyToColl()
-	self.aabbBody:moveTo(self.x+self.tw/2,self.y+self.z/4-self.th/2-self.tl/2)
-	self.aabbHead:moveTo(self.x+self.tw/2,self.y+self.z/4-self.th-self.tl/2)
-	self.aabbFoot:moveTo(self.x+self.tw/2,self.y+self.z/4-self.tl/2)
-	self.aabbLeft:moveTo(self.x-AttackZoneWidth/2,self.y+self.z/4-self.th/2)
-	self.aabbRight:moveTo(self.x+self.tw+AttackZoneWidth/2,self.y+self.z/4-self.th/2)
+	self.aabbBody:moveTo(self.x+self.w/2,self.y+self.z/4-self.h/2-self.l/2)
+	self.aabbHead:moveTo(self.x+self.w/2,self.y+self.z/4-self.h-self.l/2)
+	self.aabbFoot:moveTo(self.x+self.w/2,self.y+self.z/4-self.l/2)
+	self.aabbLeft:moveTo(self.x-AttackZoneWidth/2,self.y+self.z/4-self.h/2)
+	self.aabbRight:moveTo(self.x+self.w+AttackZoneWidth/2,self.y+self.z/4-self.h/2)
 end
 
 function role:updateSkeleton(dt)
 	self.skeleton.flipX = not self.facingRight
-	self.skeleton.x=self.x+self.tw/2
+	self.skeleton.x=self.x+self.w/2
 	self.skeleton.y=self.y+self.z/4
 	self.animState:update(dt)
 	self.animState:apply(self.skeleton)
