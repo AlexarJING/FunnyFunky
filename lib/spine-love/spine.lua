@@ -240,7 +240,7 @@ function spine.Skeleton.new (name,skeletonData, group)
 						attachment.shearX,
 						attachment.shearY)
 
-
+					love.graphics.setBlendMode("alpha")
 				end
 			elseif attachment.type== spine.AttachmentType.mesh 
 				or attachment.type == spine.AttachmentType.weightedmesh then
@@ -273,7 +273,7 @@ function spine.Skeleton.new (name,skeletonData, group)
 						xScale ,
 						-yScale
 						)
-			
+					love.graphics.setBlendMode("alpha")
 				end
 			elseif attachment== spine.AttachmentType.skinnedmesh then
 
@@ -343,7 +343,7 @@ function spine.Skeleton.new (name,skeletonData, group)
 			end
 		end
 	end
-	love.graphics.setBlendMode("alpha")
+	
 	return self
 end
 
