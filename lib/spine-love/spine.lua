@@ -250,8 +250,8 @@ function spine.Skeleton.new (name,skeletonData, group)
 					local x = slot.bone.worldX 
 					local y = slot.bone.worldY 
 					local rotation = slot.bone.worldRotation 
-					local xScale = slot.bone.worldScaleX
-					local yScale = slot.bone.worldScaleY
+					local xScale = 1
+					local yScale = 1
 					if self.flipX then
 						xScale = -xScale
 						rotation = -rotation

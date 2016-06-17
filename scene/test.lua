@@ -65,6 +65,7 @@ function scene:update(dt)
 	buttonA:update()
 	buttonB:update()
 	self.stage:update(dt)
+	love.window.setTitle(love.timer.getFPS())
 end 
 
 
