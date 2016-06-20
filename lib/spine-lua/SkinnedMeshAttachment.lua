@@ -94,8 +94,8 @@ function SkinnedMeshAttachment.new (name)
 					vx = weights[b]
 					vy = weights[b + 1]
 					weight = weights[b + 2]
-					wx = wx + (vx * bone.m00 + vy * bone.m01 + bone.worldX) * weight
-					wy = wy + (vx * bone.m10 + vy * bone.m11 + bone.worldY) * weight
+					wx = wx + (vx * bone.m00 + vy * bone.m01 + bone.worldX) * weight 
+					wy = wy + (vx * bone.m10 + vy * bone.m11 + bone.worldY) * weight 
 					v = v + 1
 					b = b + 3
 				end
@@ -115,8 +115,8 @@ function SkinnedMeshAttachment.new (name)
 					vx = weights[b] + ffd[f]
 					vy = weights[b + 1] + ffd[f + 1]
 					weight = weights[b + 2]
-					wx = wx + (vx * bone.m00 + vy * bone.m01 + bone.worldX) * weight
-					wy = wy + (vx * bone.m10 + vy * bone.m11 + bone.worldY) * weight
+					wx = wx + (vx * bone.m00 + vy * bone.m01 + bone.worldX) * weight 
+					wy = wy + (vx * bone.m10 + vy * bone.m11 + bone.worldY) * weight 
 					v = v + 1
 					b = b + 3
 					f = f + 2

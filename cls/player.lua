@@ -35,7 +35,11 @@ end
 
 function player:keypress(key)
 	if key=="space" then self:jump() end
-	if key=="f" then self:attack() end
+	if key=="left" then self:attack() end
+	if key=="1" then self.attackSlot= self.attackOrder[1] end
+	if key=="2" then self.attackSlot= self.attackOrder[2] end
+	if key=="3" then self.attackSlot= self.attackOrder[3] end
+	if key=="4" then self.attackSlot= self.attackOrder[4] end
 end
 
 

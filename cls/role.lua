@@ -3,7 +3,10 @@ local RoleSize = 0.3 --人物比例尺
 local RoleHeight = 120 --人物高度
 local RoleWidth = 70 --人物宽度
 local RoleLenth = 10 --人物厚度
-local RoleSpeed = 1 --人物加速度
+local RoleSpeed = 0.5 --人物加速度
+local RoleMaxSpeed = 8
+local RoleWalkSpeed = 5
+
 
 local AttackZoneWidth = 50 --攻击区域宽度
 local AttackComboCD =0.5 --攻击连击冷却
@@ -40,7 +43,7 @@ function role:initAnim(name,subname,x,y,z)
 	local skeleton,skeletonData,state,stateData = spine.newActor(name,subname,x,y,z,RoleSize)
 	self.skeleton=skeleton
 	self.animState=state
-	self.animState:setAnimationByName (0, "idle1", true)
+	self.currentAnim=self.animState:setAnimationByName (0, "idle1", true)
 end
 
 function role:initProperties(x,y,z,stage)
@@ -74,6 +77,10 @@ function role:initProperties(x,y,z,stage)
 
 	self.comboTimer = self.comboCD
 	self.attackLevel = 1
+	self.comboStyle = 1
+	self.attackOrder = attackOrder
+	self.attackSlot= attackOrder[self.comboStyle]
+
 
 	self.canMove = true
 	self.canAttack = true
@@ -86,7 +93,7 @@ function role:initState()
 	for name,action in pairs(states) do
 		self.state:reg(action,name=="idle")
 	end
-	self.state:switch(nil , self.state.stack["idle"])
+	self:switchState("idle")
 end
 
 function role:initAABB()
@@ -123,6 +130,7 @@ end
 
 
 function role:playAnim(name,loop,add,delay,speed)
+	--print(name,loop,add)
 	if add then
 		self.currentAnim.loop = false
 		self.currentAnim = self.animState:addAnimationByName (0, name, loop, delay or 0)
@@ -130,16 +138,19 @@ function role:playAnim(name,loop,add,delay,speed)
 		self.currentAnim = self.animState:setAnimationByName (0, name, loop)
 	end
 	self.currentAnim.timeScale=speed or 1
+	self.currentAnim.onEvent = function(track,event)
+		self:attackTiming(event.data.name)
+	end
 end
 
 
 function role:collTest()
-	
+	--[[
 	for shape, delta in pairs(self.stage.world:collisions(self.aabbBody)) do
        	if shape.part=="body" and math.abs(shape.parent.z-self.z)<math.abs(self.l+shape.parent.l) then
    			self:moveTo(self.x-self.dx,self.y,self.z-self.dz)
        	end
-    end
+    end]]
 end
 
 function role:hitTest()
@@ -174,13 +185,14 @@ function role:applyG()
 	local test=false
 	for shape, delta in pairs(self.stage.world:collisions(self.aabbFoot)) do
        	
+       --[[
        	if shape.part=="foot" and math.abs(shape.parent.z-self.z)<math.abs(self.l+shape.parent.l)*3  then
    			self:moveTo(self.x+delta.x ,self.y,self.z+delta.y)
-   		end
+   		end]]
 
        	if shape.part=="head" and self.dy>=0 and math.abs(shape.parent.z-self.z)<math.abs(self.l+shape.parent.l)*3  then
        		if not self.onGround then
-       			self:moveTo(self.x ,shape.parent.y-shape.parent.th,self.z)
+       			self:moveTo(self.x ,shape.parent.y-shape.parent.h,self.z)
        		end
    			test=true
        	end
@@ -224,15 +236,40 @@ function role:updateSkeleton(dt)
 end
 
 function role:translate()
-	local multiply = self.isRunning and 2 or 1
-	
-	self.dx = self.dx + self.dax*multiply
-	self.dz = self.dz + self.daz*multiply
-	
+	if self.isRunning then
+		self.dx = self.dx + self.dax
+		self.dz = self.dz + self.daz
+		
+		if math.abs(self.dx)>RoleMaxSpeed then
+			self.dx = math.sign(self.dx)*RoleMaxSpeed
+		end
+
+		if math.abs(self.dz)>RoleMaxSpeed then
+			self.dz = math.sign(self.dz)*RoleMaxSpeed
+		end
+	else
+		if math.abs(self.dx)>RoleWalkSpeed then
+			self.dx=self.dx*0.97
+		else
+			self.dx = math.sign(self.dax)*RoleWalkSpeed
+		end
+
+		if math.abs(self.dz)>RoleWalkSpeed then
+			self.dz=self.dz*0.97
+		else
+			self.dz = math.sign(self.daz)*RoleWalkSpeed
+		end
+	end
+
+	if math.abs(self.dx)>RoleWalkSpeed or math.abs(self.dz)>RoleWalkSpeed then
+		self.isRunning =true
+	else
+		self.isRunning = false
+	end
+
 	self:applyG()
 
-	self.dx=self.dx*0.8
-	self.dz=self.dz*0.8
+	
 
 	if math.abs(self.dx)<0.1 then self.dx=0 end
 	if math.abs(self.dz)<0.1 then self.dz=0 end
@@ -257,22 +294,10 @@ function role:translate()
 	self.z = self.z + self.dz
 	self.y = self.y + self.dy
 
-	self.dax=0
-	self.daz=0
-
 	self:applyToColl()
 end
 
-function role:attackCombo(dt)
-	if self.isAttacking then
-		self.comboTimer = self.comboCD
-	else
-		self.comboTimer = self.comboTimer - dt
-		if self.comboTimer < 0 then
-			self.attackLevel=1
-		end
-	end
-end
+
 
 function role:moveTo(x,y,z)
 	self.x=x
@@ -284,7 +309,7 @@ end
 function role:jump()
 	if not self.canJump then return end
 	if self.isRunning then
-		self.dy = -12
+		self.dy = -10
 	else
 		self.dy = -8
 	end
@@ -293,23 +318,12 @@ function role:jump()
 	self.standingOnObject=false
 end
 
-
-function role:attack()
-	if not self.canAttack then return end
-	if self.isAttacking then			
-		self.nextAttack = true
-	else
-		self.isAttacking = true
-	end
-	
-end
-
 function role:attackTiming(name)
 	if name=="hittime" then
 		self:enableAttackZone()
-		self.inputActive=false
+		self.canAttack = false
 	elseif name=="chuangetime" then
-		self.inputActive=true
+		self.canAttack = true
 	elseif name=="hittimeend" then
 		self:enableAttackZone(false)
 	end
@@ -327,6 +341,43 @@ end
 
 
 
+function role:attackCombo(dt)
+	if self.isAttacking then
+		self.comboTimer = self.comboCD
+	else
+		self.comboTimer = self.comboTimer - dt
+		if self.comboTimer < 0 then
+			self.attackLevel=1
+		end
+	end
+end
+
+function role:attackLevelUp()
+	self.attackLevel = self.attackLevel + 1
+	if not self.attackSlot[self.attackLevel] then
+		self.attackLevel = 0
+	end
+
+end
+
+function role:attack()
+	if self.isRunning then
+		self.hitRunReady=true
+		return
+	end
+	if self.isAttacking then	
+		self.nextAttack = true		
+	else
+		self.isAttacking = true
+	end
+	
+end
+
+function role:switchState(stateName)
+	self.state:switch(nil , self.state.stack[stateName])
+end
+
+
 function role:update(dt)
 	self:attackCombo(dt)
 
@@ -337,6 +388,9 @@ function role:update(dt)
 		
 	self:updateSkeleton(dt)
 	self.state:update()
+
+	self.dax=0
+	self.daz=0
 end
 
 

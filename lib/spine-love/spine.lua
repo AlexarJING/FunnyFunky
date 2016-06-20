@@ -166,7 +166,6 @@ function spine.Skeleton.new (name,skeletonData, group)
 						table.insert(vertices,{
 							slotvertices[vertIndexX],slotvertices[vertIndexY],
 							attachment.uvs[vertIndexX],attachment.uvs[vertIndexY],
-							255,255,255,255
 							})
 					end
 					
@@ -186,12 +185,9 @@ function spine.Skeleton.new (name,skeletonData, group)
 						local vert ={
 							vertices[vertIndexX],vertices[vertIndexY],
 							attachment.uvs[vertIndexX],attachment.uvs[vertIndexY],
-							255,255,255,255
 							}
 						meshData.mesh:setVertex( i, vert )
 					end
-
-
 				end
 			end
 		end

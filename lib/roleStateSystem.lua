@@ -31,8 +31,7 @@ function M.update(state)
 		end
 	end
 	
-	if not state.current.condition(state.role) and 
-		state.current ~= state.default then 
+	if not state.current.condition(state.role) then 
 		M.switch(state, state.current , state.default)
 	end
 end

@@ -57,6 +57,8 @@ function scene:draw()
 	love.graphics.print("Mega State: "..hero.state.current.name, 100,100)
 	love.graphics.print("isAttacking: "..tostring(hero.isAttacking), 100,130)
 	love.graphics.print("attack level: "..tostring(hero.attackLevel), 100,160)
+	love.graphics.print("next attack: "..tostring(hero.nextAttack), 300,160)
+	love.graphics.print("can attack: "..tostring(hero.canAttack), 500,160)
 end
 
 function scene:update(dt)
